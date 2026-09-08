@@ -2,7 +2,10 @@ import React from 'react'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 import { LeadForm } from '@/components/LeadForm'
+import { BookingCalendar } from '@/components/BookingCalendar'
+import { CountUp } from '@/components/CountUp'
 import { ProductCard, type ProductSummary } from '@/components/ProductCard'
+import { getSiteSettings } from '@/lib/site-settings'
 
 type MediaDoc = {
   url?: string | null
@@ -81,11 +84,22 @@ type Block = {
   // hero
   tag?: string | null
   highlightText?: string | null
+  layout?: 'centered' | 'split' | 'single' | 'collage' | null
+  visualStyle?: 'photo' | 'brandMark' | null
   imageStyle?: 'rounded' | 'circle' | null
   primaryCtaLabel?: string | null
   primaryCtaUrl?: string | null
   secondaryCtaLabel?: string | null
   secondaryCtaUrl?: string | null
+
+  // imageBanner (collage)
+  collageImages?: ImageItem[] | null
+
+  // dualDiagram
+  leftLabel?: string | null
+  leftImage?: ImageRef
+  rightLabel?: string | null
+  rightImage?: ImageRef
 
   // logoStrip
   logos?: LogoItem[] | null
@@ -103,13 +117,20 @@ type Block = {
   steps?: StepItem[] | null
 
   // bookingPromo
-  calendarNote?: string | null
+  freeSlotsLabel?: string | null
+  totalSlots?: number | null
+  bookedSlots?: number | null
+  rightTitle?: string | null
+  rightDescription?: string | null
+  features?: { title?: string | null; description?: string | null }[] | null
   originalPrice?: string | null
   badgeText?: string | null
-  bullets?: PointItem[] | null
 
   // leadFormSection
   serviceOptions?: ServiceOption[] | null
+  businessListHeading?: string | null
+  businessTypes?: { title?: string | null; points?: PointItem[] | null }[] | null
+  serviceLabel?: string | null
 
   // timeline / caseStudyList
   // (uses items above, reused loosely per-block)
@@ -176,23 +197,35 @@ function CtaButton({
   )
 }
 
-const dayLabels = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']
-
-function CalendarMock() {
-  const cells = Array.from({ length: 30 }, (_, i) => i + 1)
-  const activeDays = [8, 12, 15, 21]
+function LoopIcon() {
   return (
-    <div className="calendar-mock">
-      {dayLabels.map((d) => (
-        <span key={d} style={{ background: 'transparent', color: 'var(--color-ink)', fontWeight: 700 }}>
-          {d}
-        </span>
-      ))}
-      {cells.map((day) => (
-        <span key={day} className={activeDays.includes(day) ? 'is-active' : ''}>
-          {day}
-        </span>
-      ))}
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 3a9 9 0 1 0 9 9"
+        stroke="var(--color-accent)"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path d="M12 3v7l5.5-3.2L12 3Z" fill="var(--color-accent)" />
+    </svg>
+  )
+}
+
+function HeroBrandMark({ logoUrl }: { logoUrl?: string | null }) {
+  if (logoUrl) {
+    return (
+      <div className="hero-split__visual">
+        <img src={logoUrl} alt="" className="hero-split__logo-image" />
+      </div>
+    )
+  }
+
+  return (
+    <div className="hero-split__visual">
+      <div className="hero-split__wordmark">
+        <div className="hero-split__wordmark-name">enhouse</div>
+        <div className="hero-split__wordmark-tld">.digital</div>
+      </div>
     </div>
   )
 }
@@ -346,6 +379,30 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
             )
 
           case 'imageBanner': {
+            if (block.layout === 'collage') {
+              const collage = (block.collageImages || []).slice(0, 6)
+              return (
+                <section key={i} className="section" style={{ paddingTop: 0, paddingBottom: 0 }}>
+                  <div className="photo-collage">
+                    {collage.map((item, j) => {
+                      const cImg = resolveImage(item.image)
+                      if (!cImg?.url) return null
+                      return (
+                        <div key={j} className="photo-collage__cell">
+                          <img src={cImg.url} alt={cImg.alt || ''} />
+                        </div>
+                      )
+                    })}
+                    <div className="photo-collage__card">
+                      <h2>{block.heading}</h2>
+                      {block.text && <p>{block.text}</p>}
+                      <CtaButton label={block.ctaLabel} url={block.ctaUrl} />
+                    </div>
+                  </div>
+                </section>
+              )
+            }
+
             const overlayBg =
               block.overlayColor === 'gold'
                 ? 'linear-gradient(180deg, rgba(201,150,43,0.35) 0%, rgba(25,21,16,0.85) 100%)'
@@ -384,23 +441,66 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
 
           case 'hero': {
             const isCircle = block.imageStyle === 'circle'
+            const headingNode =
+              block.highlightText && block.heading?.includes(block.highlightText) ? (
+                <>
+                  {block.heading.split(block.highlightText)[0]}
+                  <span className="accent" style={{ color: 'var(--color-accent)' }}>
+                    {block.highlightText}
+                  </span>
+                  {block.heading.split(block.highlightText)[1]}
+                </>
+              ) : (
+                block.heading
+              )
+
+            if (block.layout === 'split') {
+              const brandLogoUrl =
+                block.visualStyle === 'brandMark' ? (await getSiteSettings()).logoUrl : null
+              return (
+                <section key={i} className="hero-split-wrap">
+                  <div className="hero-split">
+                    <div className="hero-split__content">
+                      {block.tag && <span className="tag">{block.tag}</span>}
+                      <h1>{headingNode}</h1>
+                      {block.subheading && <p className="hero-split__subheading">{block.subheading}</p>}
+                      <div className="hero-split__actions">
+                        <CtaButton label={block.primaryCtaLabel} url={block.primaryCtaUrl} variant="primary" />
+                        <CtaButton label={block.secondaryCtaLabel} url={block.secondaryCtaUrl} variant="secondary" />
+                      </div>
+                    </div>
+                    {block.visualStyle === 'brandMark' ? (
+                      <HeroBrandMark logoUrl={brandLogoUrl} />
+                    ) : (
+                      img?.url && (
+                        <div className="hero-split__visual">
+                          <div
+                            style={{
+                              width: '100%',
+                              maxWidth: 480,
+                              borderRadius: 24,
+                              overflow: 'hidden',
+                            }}
+                          >
+                            <img
+                              src={img.url}
+                              alt={img.alt || ''}
+                              style={{ aspectRatio: '4 / 3', objectFit: 'cover', width: '100%' }}
+                            />
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </section>
+              )
+            }
+
             return (
               <section key={i} className="section" style={{ paddingTop: 96 }}>
                 <div className="container" style={{ textAlign: 'center', maxWidth: 760 }}>
                   {block.tag && <span className="tag">{block.tag}</span>}
-                  <h1 style={{ marginTop: 20 }}>
-                    {block.highlightText && block.heading?.includes(block.highlightText) ? (
-                      <>
-                        {block.heading.split(block.highlightText)[0]}
-                        <span className="accent" style={{ color: 'var(--color-accent)' }}>
-                          {block.highlightText}
-                        </span>
-                        {block.heading.split(block.highlightText)[1]}
-                      </>
-                    ) : (
-                      block.heading
-                    )}
-                  </h1>
+                  <h1 style={{ marginTop: 20 }}>{headingNode}</h1>
                   {block.subheading && (
                     <p style={{ fontSize: 19, maxWidth: 560, margin: '0 auto 28px' }}>{block.subheading}</p>
                   )}
@@ -440,6 +540,7 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                       style={{
                         textAlign: 'center',
                         fontWeight: 700,
+                        fontSize: 36,
                         fontFamily: 'var(--font-heading), Manrope, sans-serif',
                         color: 'var(--color-ink)',
                         marginBottom: 24,
@@ -461,6 +562,17 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                         logo
                       )
                     })}
+                  </div>
+                  <div className="logo-strip-marquee">
+                    <div className="logo-strip-marquee__track">
+                      {[0, 1].map((copy) =>
+                        block.logos?.map((item, j) => {
+                          const logoImg = resolveImage(item.logo)
+                          if (!logoImg?.url) return null
+                          return <img key={`${copy}-${j}`} src={logoImg.url} alt={copy === 0 ? logoImg.alt || '' : ''} aria-hidden={copy === 1} />
+                        }),
+                      )}
+                    </div>
                   </div>
                 </div>
               </section>
@@ -510,131 +622,220 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
           case 'featureShowcase':
             return (
               <section key={i} className="section">
-                <div
-                  className="container"
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: block.images?.length ? '1fr 1fr' : '1fr',
-                    gap: '3.5rem',
-                    alignItems: 'center',
-                  }}
-                >
-                  <div>
+                <div className="container">
+                  <div className="section-head">
                     {block.eyebrow && <span className="eyebrow">{block.eyebrow}</span>}
                     <h2>{block.heading}</h2>
                     {block.text && <p style={{ fontSize: 18 }}>{block.text}</p>}
-                    {block.points && block.points.length > 0 && (
-                      <ul className="check-list" style={{ margin: '20px 0' }}>
-                        {block.points.map((p, j) => (
-                          <li key={j}>{p.text}</li>
-                        ))}
-                      </ul>
+                  </div>
+                  <div className={`feature-showcase-grid${block.images?.length ? ' has-image' : ''}`}>
+                    <div>
+                      {block.points && block.points.length > 0 && (
+                        <ul className="dot-list" style={{ margin: 0 }}>
+                          {block.points.map((p, j) => (
+                            <li key={j}>{p.text}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                    {block.images && block.images.length === 1 && (
+                      <div className="feature-showcase-image-wrap">
+                        {(() => {
+                          const showcaseImg = resolveImage((block.images as ImageItem[])[0].image)
+                          return showcaseImg?.url ? (
+                            <img className="feature-showcase-image" src={showcaseImg.url} alt={showcaseImg.alt || ''} />
+                          ) : null
+                        })()}
+                      </div>
                     )}
+                    {block.images && block.images.length > 1 && (
+                      <div className="feature-showcase-image-wrap">
+                        <div className="showcase-phone-row">
+                          {(block.images as ImageItem[]).map((item, j) => {
+                            const showcaseImg = resolveImage(item.image)
+                            if (!showcaseImg?.url) return null
+                            return (
+                              <div key={j} className="showcase-phone-slide">
+                                <img src={showcaseImg.url} alt={showcaseImg.alt || ''} />
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ textAlign: 'center', marginTop: 40 }}>
                     <CtaButton label={block.ctaLabel} url={block.ctaUrl} />
                   </div>
-                  {block.images && block.images.length > 0 && (
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: `repeat(${Math.min(block.images.length, 3)}, 1fr)`,
-                        gap: 16,
-                      }}
-                    >
-                      {(block.images as ImageItem[]).map((item, j) => {
-                        const showcaseImg = resolveImage(item.image)
-                        if (!showcaseImg?.url) return null
-                        return (
-                          <div key={j} className="phone-frame">
-                            <img src={showcaseImg.url} alt={showcaseImg.alt || ''} />
-                          </div>
-                        )
-                      })}
-                    </div>
-                  )}
                 </div>
               </section>
             )
 
-          case 'processSteps':
+          case 'processSteps': {
+            const psHeading = block.heading || ''
+            const psHighlight = '3 Layer'
+            const psHeadingNode = psHeading.includes(psHighlight) ? (
+              <>
+                {psHeading.split(psHighlight)[0]}
+                <br className="mobile-only-break" />
+                <span style={{ color: 'var(--color-accent)' }}>{psHighlight}</span>
+                {psHeading.split(psHighlight)[1]}
+              </>
+            ) : (
+              psHeading
+            )
             return (
-              <section key={i} className="section section--dark">
-                <div className="container">
+              <section key={i} className="section section--dark process-steps-section">
+                <div className="container process-steps-container">
                   <div className="section-head">
-                    <h2>{block.heading}</h2>
+                    <h2>{psHeadingNode}</h2>
                     {block.subheading && <p style={{ fontSize: 18 }}>{block.subheading}</p>}
                   </div>
                   <div className="grid grid-3">
                     {block.steps?.map((step, j) => (
                       <div key={j} className="process-step">
-                        <div className="process-step-number">{step.number}</div>
-                        <h3 style={{ fontSize: 19 }}>{step.title}</h3>
-                        {step.description && <p style={{ fontSize: 15 }}>{step.description}</p>}
+                        <div className="process-step-top">
+                          <span className="process-step-number">{step.number}</span>
+                          <span className="process-step-badge">
+                            <span className="process-step-badge-dot" />
+                            Layer {step.number}
+                          </span>
+                        </div>
+                        <h3>{step.title}</h3>
+                        {step.description && <p>{step.description}</p>}
                       </div>
                     ))}
                   </div>
                   {block.ctaLabel && block.ctaUrl && (
-                    <div style={{ textAlign: 'center', marginTop: 40 }}>
+                    <div className="process-cta">
                       <CtaButton label={block.ctaLabel} url={block.ctaUrl} />
                     </div>
                   )}
                 </div>
               </section>
             )
+          }
 
-          case 'bookingPromo':
+          case 'bookingPromo': {
+            const total = block.totalSlots ?? 15
+            const booked = block.bookedSlots ?? 0
+            const remaining = Math.max(0, total - booked)
+            const progressPct = total > 0 ? Math.min(100, (booked / total) * 100) : 0
             return (
               <section key={i} className="section">
-                <div
-                  className="container"
-                  style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3.5rem', alignItems: 'center' }}
-                >
-                  <div>
-                    {block.calendarNote && (
-                      <p style={{ fontWeight: 700, color: 'var(--color-ink)', marginBottom: 16 }}>
-                        {block.calendarNote}
-                      </p>
-                    )}
-                    <CalendarMock />
-                  </div>
-                  <div className="card" style={{ textAlign: 'center' }}>
+                <div className="container booking-container" style={{ maxWidth: 900 }}>
+                  <div style={{ textAlign: 'center', marginBottom: 40 }}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style={{ margin: '0 auto 12px' }}>
+                      <rect x="5" y="4" width="14" height="17" rx="2" stroke="var(--color-accent)" strokeWidth="1.6" />
+                      <path d="M9 3.5h6a1 1 0 0 1 1 1V6H8V4.5a1 1 0 0 1 1-1Z" stroke="var(--color-accent)" strokeWidth="1.6" />
+                      <path d="M9 13.5l2 2 4-4.5" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                     <h2>{block.heading}</h2>
-                    {block.bullets && block.bullets.length > 0 && (
-                      <ul className="check-list" style={{ textAlign: 'left', margin: '20px 0' }}>
-                        {block.bullets.map((b, j) => (
-                          <li key={j}>{b.text}</li>
-                        ))}
-                      </ul>
-                    )}
-                    <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 10 }}>
-                      {block.originalPrice && (
-                        <span style={{ textDecoration: 'line-through', color: 'var(--color-muted)' }}>
-                          {block.originalPrice}
-                        </span>
-                      )}
-                      {block.badgeText && <span className="tag">{block.badgeText}</span>}
+                  </div>
+                  <div className="booking-panel">
+                    <div className="booking-panel__col">
+                      <p className="booking-panel__slots">
+                        {block.freeSlotsLabel}: <CountUp value={remaining} /> 🔥
+                      </p>
+                      <div className="booking-progress">
+                        <div className="booking-progress__fill" style={{ width: `${progressPct}%` }} />
+                      </div>
+                      <span className="tag" style={{ background: 'rgba(201,150,43,0.12)', color: 'var(--color-accent-dark)' }}>
+                        จองแล้ว <CountUp value={booked} /> จาก {total} สิทธิ์
+                      </span>
+                      <div style={{ marginTop: 20 }}>
+                        <BookingCalendar />
+                      </div>
                     </div>
-                    <div style={{ marginTop: 20 }}>
-                      <CtaButton label={block.ctaLabel} url={block.ctaUrl} />
+                    <div className="booking-panel__col">
+                      {block.rightTitle && <h3 style={{ fontSize: 22 }}>{block.rightTitle}</h3>}
+                      {block.rightDescription && <p style={{ fontSize: 15 }}>{block.rightDescription}</p>}
+                      {block.features && block.features.length > 0 && (
+                        <ul className="feature-dot-list">
+                          {block.features.map((f, j) => (
+                            <li key={j}>
+                              <strong>{f.title}</strong>
+                              {f.description && <span>{f.description}</span>}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {block.originalPrice && (
+                        <div className="booking-panel__price-old">{block.originalPrice}</div>
+                      )}
+                      {block.badgeText && <div className="booking-panel__price-new">{block.badgeText}</div>}
+                      <CtaButton label={block.ctaLabel} url={block.ctaUrl} variant="secondary" />
                     </div>
                   </div>
                 </div>
               </section>
             )
+          }
 
-          case 'leadFormSection':
+          case 'leadFormSection': {
+            const hasBusinessTypes = block.businessTypes && block.businessTypes.length > 0
             return (
-              <section key={i} className="section section--alt">
-                <div className="container" style={{ maxWidth: 560 }}>
+              <section key={i} className="section lead-form-section">
+                <div
+                  className="container lead-form-container"
+                  style={{ maxWidth: hasBusinessTypes ? undefined : 560 }}
+                >
                   <div className="section-head">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" style={{ margin: '0 auto 12px' }}>
+                      <rect x="4" y="5" width="16" height="15" rx="2" stroke="var(--color-accent)" strokeWidth="1.6" />
+                      <path d="M4 9h16" stroke="var(--color-accent)" strokeWidth="1.6" />
+                      <path d="M8 3.5v3M16 3.5v3" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" />
+                      <circle cx="15.5" cy="15" r="2.6" stroke="var(--color-accent)" strokeWidth="1.4" />
+                      <path d="M15.5 13.7V15l1 .6" stroke="var(--color-accent)" strokeWidth="1.2" strokeLinecap="round" />
+                    </svg>
                     <h2>{block.heading}</h2>
                     {block.subheading && <p style={{ fontSize: 18, color: 'var(--color-muted)' }}>{block.subheading}</p>}
                   </div>
-                  <LeadForm
-                    serviceOptions={block.serviceOptions?.map((o) => o.label).filter(Boolean) as string[] | undefined}
-                  />
+
+                  {hasBusinessTypes ? (
+                    <div className="lead-split">
+                      <div className="card">
+                        {block.businessListHeading && <h3 style={{ fontSize: 20 }}>{block.businessListHeading}</h3>}
+                        <div style={{ display: 'grid', gap: 24, marginTop: 20 }}>
+                          {block.businessTypes!.map((biz, j) => (
+                            <div key={j} className="lead-business-item">
+                              <span className="lead-business-item__number">{j + 1}</span>
+                              <div>
+                                <strong>{biz.title}</strong>
+                                {biz.points && biz.points.length > 0 && (
+                                  <ul className="check-list" style={{ marginTop: 6 }}>
+                                    {biz.points.map((p, k) => (
+                                      <li key={k}>{p.text}</li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="card">
+                        <h3 style={{ fontSize: 20 }}>ข้อมูลผู้ติดต่อ</h3>
+                        <div style={{ marginTop: 20 }}>
+                          <LeadForm
+                            serviceOptions={block.serviceOptions?.map((o) => o.label).filter(Boolean) as string[] | undefined}
+                            serviceLabel={block.serviceLabel || undefined}
+                            submitLabel="ยืนยันนัดหมาย"
+                            showSchedule={false}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <LeadForm
+                      serviceOptions={block.serviceOptions?.map((o) => o.label).filter(Boolean) as string[] | undefined}
+                      serviceLabel={block.serviceLabel || undefined}
+                    />
+                  )}
                 </div>
               </section>
             )
+          }
 
           case 'timeline':
             return (
@@ -834,6 +1035,49 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                 </div>
               </section>
             )
+
+          case 'dualDiagram': {
+            const leftImg = resolveImage(block.leftImage)
+            const rightImg = resolveImage(block.rightImage)
+            return (
+              <section key={i} className="section section--alt dual-diagram-section">
+                <div className="container dual-diagram-container">
+                  <div className="section-head">
+                    <h2>{block.heading}</h2>
+                    {block.subheading && <p style={{ fontSize: 18, color: 'var(--color-muted)' }}>{block.subheading}</p>}
+                  </div>
+                  <div className="grid grid-2">
+                    {leftImg?.url && (
+                      <div className="card" style={{ padding: 24 }}>
+                        {block.leftLabel && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                            <LoopIcon />
+                            <strong style={{ fontFamily: 'var(--font-heading), Manrope, sans-serif', fontSize: 17 }}>
+                              {block.leftLabel}
+                            </strong>
+                          </div>
+                        )}
+                        <img src={leftImg.url} alt={leftImg.alt || ''} style={{ width: '100%' }} />
+                      </div>
+                    )}
+                    {rightImg?.url && (
+                      <div className="card" style={{ padding: 24 }}>
+                        {block.rightLabel && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                            <LoopIcon />
+                            <strong style={{ fontFamily: 'var(--font-heading), Manrope, sans-serif', fontSize: 17 }}>
+                              {block.rightLabel}
+                            </strong>
+                          </div>
+                        )}
+                        <img src={rightImg.url} alt={rightImg.alt || ''} style={{ width: '100%' }} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </section>
+            )
+          }
 
           case 'diagramImage':
             return (

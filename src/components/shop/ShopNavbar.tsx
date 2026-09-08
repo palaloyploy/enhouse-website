@@ -46,10 +46,12 @@ function SearchIcon() {
 
 export function ShopNavbar({
   siteName,
+  logoUrl,
   categories,
   hasSale,
 }: {
   siteName: string
+  logoUrl?: string | null
   categories: CategoryLink[]
   hasSale: boolean
 }) {
@@ -70,7 +72,7 @@ export function ShopNavbar({
         </form>
 
         <a href="/shop" className="shop-navbar__logo">
-          {siteName}
+          {logoUrl ? <img src={logoUrl} alt={siteName} /> : siteName}
         </a>
 
         <div className="shop-navbar__icons">

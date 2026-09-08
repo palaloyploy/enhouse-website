@@ -2,7 +2,17 @@
 
 import React, { useState } from 'react'
 
-export function LeadForm({ serviceOptions }: { serviceOptions?: string[] }) {
+export function LeadForm({
+  serviceOptions,
+  serviceLabel = 'บริการที่สนใจ',
+  submitLabel = 'ส่งข้อมูล',
+  showSchedule = true,
+}: {
+  serviceOptions?: string[]
+  serviceLabel?: string
+  submitLabel?: string
+  showSchedule?: boolean
+}) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
   const [selectedService, setSelectedService] = useState<string>('')
 
@@ -64,14 +74,14 @@ export function LeadForm({ serviceOptions }: { serviceOptions?: string[] }) {
   return (
     <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
       <input name="name" placeholder="ชื่อ-นามสกุล" required style={inputStyle} />
+      <input name="business" placeholder="บริษัท" style={inputStyle} />
       <input name="phone" placeholder="เบอร์โทรศัพท์" required style={inputStyle} />
       <input name="email" type="email" placeholder="อีเมล" style={inputStyle} />
-      <input name="business" placeholder="ธุรกิจของคุณ" style={inputStyle} />
 
       {serviceOptions && serviceOptions.length > 0 && (
         <div>
           <label style={{ fontSize: 14, color: 'var(--color-muted)', display: 'block', marginBottom: 8 }}>
-            บริการที่สนใจ
+            {serviceLabel}
           </label>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {serviceOptions.map((option) => {
@@ -100,17 +110,21 @@ export function LeadForm({ serviceOptions }: { serviceOptions?: string[] }) {
         </div>
       )}
 
-      <label style={{ fontSize: 14, color: 'var(--color-muted)' }}>
-        วันที่ต้องการนัด
-        <input name="bookingDate" type="date" style={{ ...inputStyle, marginTop: 6 }} />
-      </label>
-      <input name="bookingTime" placeholder="เวลาที่สะดวก เช่น 14:00" style={inputStyle} />
+      {showSchedule && (
+        <>
+          <label style={{ fontSize: 14, color: 'var(--color-muted)' }}>
+            วันที่ต้องการนัด
+            <input name="bookingDate" type="date" style={{ ...inputStyle, marginTop: 6 }} />
+          </label>
+          <input name="bookingTime" placeholder="เวลาที่สะดวก เช่น 14:00" style={inputStyle} />
+        </>
+      )}
       <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13, color: 'var(--color-muted)' }}>
         <input name="consentPDPA" type="checkbox" required />
         ฉันยินยอมให้เก็บข้อมูลตามนโยบายความเป็นส่วนตัว (PDPA)
       </label>
-      <button type="submit" disabled={status === 'sending'} className="btn btn-primary" style={{ justifyContent: 'center' }}>
-        {status === 'sending' ? 'กำลังส่ง...' : 'ส่งข้อมูล'}
+      <button type="submit" disabled={status === 'sending'} className="btn btn-secondary" style={{ justifyContent: 'center' }}>
+        {status === 'sending' ? 'กำลังส่ง...' : submitLabel}
       </button>
       {status === 'error' && <p style={{ color: '#d92d20' }}>ส่งไม่สำเร็จ ลองใหม่อีกครั้ง</p>}
     </form>

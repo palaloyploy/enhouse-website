@@ -2,38 +2,28 @@ import React from 'react'
 
 type NavLink = { label: string; url: string }
 
+const FOOTER_NAV: NavLink[] = [
+  { label: 'หน้าหลัก', url: '/' },
+  { label: 'เกี่ยวกับเรา', url: '/about' },
+]
+
 export function Footer({
-  siteName,
-  navLinks,
-  companyName,
-  address,
-  phone,
-  lineUrl,
-  email,
+  footerServices,
+  footerPortfolio,
 }: {
   siteName: string
   navLinks: NavLink[]
-  companyName?: string | null
-  address?: string | null
-  phone?: string | null
-  lineUrl?: string | null
-  email?: string | null
+  logoUrl?: string | null
+  footerServices?: NavLink[] | null
+  footerPortfolio?: NavLink[] | null
 }) {
   return (
     <footer className="site-footer">
       <div className="container site-footer__inner">
         <div>
-          <div className="site-header__logo" style={{ color: '#fff' }}>
-            {siteName}
-          </div>
-          {companyName && <p style={{ margin: '12px 0 4px' }}>{companyName}</p>}
-          {address && <p style={{ margin: 0, whiteSpace: 'pre-line' }}>{address}</p>}
-        </div>
-
-        <div>
-          <p className="site-footer__heading">เมนู</p>
-          <div style={{ display: 'grid', gap: 8 }}>
-            {navLinks.map((link) => (
+          <p className="site-footer__heading">Enhouse</p>
+          <div className="site-footer__links">
+            {FOOTER_NAV.map((link) => (
               <a key={link.url} href={link.url}>
                 {link.label}
               </a>
@@ -42,22 +32,44 @@ export function Footer({
         </div>
 
         <div>
-          <p className="site-footer__heading">ติดต่อเรา</p>
-          <div style={{ display: 'grid', gap: 8 }}>
-            {phone && <a href={`tel:${phone}`}>{phone}</a>}
-            {email && <a href={`mailto:${email}`}>{email}</a>}
-            {lineUrl && (
-              <a href={lineUrl} target="_blank" rel="noreferrer">
-                แอดไลน์ทีมงาน
+          <p className="site-footer__heading">บริการ</p>
+          <div className="site-footer__links">
+            {(footerServices || []).map((link) => (
+              <a key={link.url} href={link.url}>
+                {link.label}
               </a>
-            )}
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <p className="site-footer__heading">ผลงาน</p>
+          <div className="site-footer__links">
+            {(footerPortfolio || []).map((link) => (
+              <a key={link.url} href={link.url}>
+                {link.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>
+
       <div className="container">
-        <p className="site-footer__copyright">
-          © {new Date().getFullYear()} {siteName}. All rights reserved.
-        </p>
+        <div className="site-footer__divider">
+          <div className="site-footer__mark" aria-hidden="true">
+            <span />
+            <span />
+          </div>
+        </div>
+        <div className="site-footer__bottom">
+          <p className="site-footer__copyright">
+            Copyright © {new Date().getFullYear()} Enhouse Co., Ltd. All rights reserved.
+          </p>
+          <div className="site-footer__legal">
+            <a href="#">นโยบายความเป็นส่วนตัว</a>
+            <a href="#">ข้อกำหนดในการให้บริการ</a>
+          </div>
+        </div>
       </div>
     </footer>
   )

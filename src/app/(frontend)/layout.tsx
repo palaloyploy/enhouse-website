@@ -1,15 +1,15 @@
 import React from 'react'
 import { getPayload } from 'payload'
-import { Manrope, Noto_Sans_Thai } from 'next/font/google'
+import { Kanit, Noto_Sans_Thai } from 'next/font/google'
 
 import config from '@/payload.config'
 import { CartProvider } from '@/lib/cart-context'
 import { WishlistProvider } from '@/lib/wishlist-context'
 import './styles.css'
 
-const manrope = Manrope({
-  subsets: ['latin'],
-  weight: ['500', '700', '800'],
+const kanit = Kanit({
+  subsets: ['thai', 'latin'],
+  weight: ['500', '600', '700', '800'],
   variable: '--font-heading',
 })
 
@@ -34,7 +34,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const gtmId = settings?.tracking?.gtmId
 
   return (
-    <html lang="th" className={`${manrope.variable} ${notoSansThai.variable}`}>
+    <html lang="th" className={`${kanit.variable} ${notoSansThai.variable}`}>
       <head>
         {gtmId && (
           <script

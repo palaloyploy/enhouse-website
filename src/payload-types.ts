@@ -182,6 +182,16 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * สร้างและแก้ไขหน้าเว็บ พร้อมเพิ่ม Section เองได้จาก layout ด้านล่าง
@@ -238,7 +248,14 @@ export interface Page {
             blockType: 'imageGallery';
           }
         | {
+            layout?: ('single' | 'collage') | null;
             image?: (number | null) | Media;
+            collageImages?:
+              | {
+                  image: number | Media;
+                  id?: string | null;
+                }[]
+              | null;
             heading: string;
             text?: string | null;
             ctaLabel?: string | null;
@@ -260,6 +277,8 @@ export interface Page {
             heading: string;
             highlightText?: string | null;
             subheading?: string | null;
+            layout?: ('centered' | 'split') | null;
+            visualStyle?: ('photo' | 'brandMark') | null;
             image?: (number | null) | Media;
             imageStyle?: ('rounded' | 'circle') | null;
             primaryCtaLabel?: string | null;
@@ -345,15 +364,20 @@ export interface Page {
           }
         | {
             heading: string;
-            calendarNote?: string | null;
-            originalPrice?: string | null;
-            badgeText?: string | null;
-            bullets?:
+            freeSlotsLabel?: string | null;
+            totalSlots?: number | null;
+            bookedSlots?: number | null;
+            rightTitle?: string | null;
+            rightDescription?: string | null;
+            features?:
               | {
-                  text: string;
+                  title: string;
+                  description?: string | null;
                   id?: string | null;
                 }[]
               | null;
+            originalPrice?: string | null;
+            badgeText?: string | null;
             ctaLabel?: string | null;
             ctaUrl?: string | null;
             id?: string | null;
@@ -363,6 +387,20 @@ export interface Page {
         | {
             heading: string;
             subheading?: string | null;
+            businessListHeading?: string | null;
+            businessTypes?:
+              | {
+                  title: string;
+                  points?:
+                    | {
+                        text: string;
+                        id?: string | null;
+                      }[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            serviceLabel?: string | null;
             serviceOptions?:
               | {
                   label: string;
@@ -459,6 +497,17 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'pricingPackages';
+          }
+        | {
+            heading: string;
+            subheading?: string | null;
+            leftLabel?: string | null;
+            leftImage: number | Media;
+            rightLabel?: string | null;
+            rightImage: number | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'dualDiagram';
           }
         | {
             heading?: string | null;
@@ -848,6 +897,20 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -906,7 +969,14 @@ export interface PagesSelect<T extends boolean = true> {
         imageBanner?:
           | T
           | {
+              layout?: T;
               image?: T;
+              collageImages?:
+                | T
+                | {
+                    image?: T;
+                    id?: T;
+                  };
               heading?: T;
               text?: T;
               ctaLabel?: T;
@@ -930,6 +1000,8 @@ export interface PagesSelect<T extends boolean = true> {
               heading?: T;
               highlightText?: T;
               subheading?: T;
+              layout?: T;
+              visualStyle?: T;
               image?: T;
               imageStyle?: T;
               primaryCtaLabel?: T;
@@ -1024,15 +1096,20 @@ export interface PagesSelect<T extends boolean = true> {
           | T
           | {
               heading?: T;
-              calendarNote?: T;
-              originalPrice?: T;
-              badgeText?: T;
-              bullets?:
+              freeSlotsLabel?: T;
+              totalSlots?: T;
+              bookedSlots?: T;
+              rightTitle?: T;
+              rightDescription?: T;
+              features?:
                 | T
                 | {
-                    text?: T;
+                    title?: T;
+                    description?: T;
                     id?: T;
                   };
+              originalPrice?: T;
+              badgeText?: T;
               ctaLabel?: T;
               ctaUrl?: T;
               id?: T;
@@ -1043,6 +1120,20 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               heading?: T;
               subheading?: T;
+              businessListHeading?: T;
+              businessTypes?:
+                | T
+                | {
+                    title?: T;
+                    points?:
+                      | T
+                      | {
+                          text?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+              serviceLabel?: T;
               serviceOptions?:
                 | T
                 | {
@@ -1151,6 +1242,18 @@ export interface PagesSelect<T extends boolean = true> {
                     ctaLabel?: T;
                     ctaUrl?: T;
                   };
+              id?: T;
+              blockName?: T;
+            };
+        dualDiagram?:
+          | T
+          | {
+              heading?: T;
+              subheading?: T;
+              leftLabel?: T;
+              leftImage?: T;
+              rightLabel?: T;
+              rightImage?: T;
               id?: T;
               blockName?: T;
             };
@@ -1395,7 +1498,22 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface SiteSetting {
   id: number;
   siteName?: string | null;
+  logo?: (number | null) | Media;
   navLinks?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  footerServices?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  footerPortfolio?:
     | {
         label: string;
         url: string;
@@ -1436,7 +1554,22 @@ export interface SiteSetting {
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
   siteName?: T;
+  logo?: T;
   navLinks?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  footerServices?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  footerPortfolio?:
     | T
     | {
         label?: T;

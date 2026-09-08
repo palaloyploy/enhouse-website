@@ -449,6 +449,13 @@
   color: var(--shop-black);
   text-align: center;
   justify-self: center;
+  display: inline-flex;
+  align-items: center;
+}
+
+.shop-navbar__logo img {
+  height: 34px;
+  width: auto;
 }
 
 .shop-navbar__icons {

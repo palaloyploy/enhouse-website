@@ -25,15 +25,48 @@ function CartIcon() {
   )
 }
 
-export function Header({ siteName, navLinks }: { siteName: string; navLinks: NavLink[] }) {
+export function SiteLogo({ siteName, logoUrl }: { siteName: string; logoUrl?: string | null }) {
+  const dotIndex = siteName.indexOf('.')
+  const name = dotIndex >= 0 ? siteName.slice(0, dotIndex) : siteName
+  const tld = dotIndex >= 0 ? siteName.slice(dotIndex) : ''
+
+  if (logoUrl) {
+    return (
+      <a href="/" className="site-logo site-logo--image">
+        <img src={logoUrl} alt={siteName} />
+      </a>
+    )
+  }
+
+  return (
+    <a href="/" className="site-logo">
+      <span className="site-logo__name">{name}</span>
+      <span className="site-logo__second-line">
+        {tld && <span className="site-logo__tld">{tld}</span>}
+        <span className="site-logo__mark" aria-hidden="true">
+          <span />
+          <span />
+        </span>
+      </span>
+    </a>
+  )
+}
+
+export function Header({
+  siteName,
+  navLinks,
+  logoUrl,
+}: {
+  siteName: string
+  navLinks: NavLink[]
+  logoUrl?: string | null
+}) {
   const [open, setOpen] = useState(false)
 
   return (
     <header className="site-header">
       <div className="container site-header__inner">
-        <a href="/" className="site-header__logo">
-          {siteName}
-        </a>
+        <SiteLogo siteName={siteName} logoUrl={logoUrl} />
 
         <nav className={`site-header__nav ${open ? 'is-open' : ''}`}>
           {navLinks.map((link) => (

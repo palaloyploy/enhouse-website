@@ -19,6 +19,8 @@ export async function getSiteSettings() {
   const siteName = settings?.siteName || 'enhouse.digital'
   const navLinks: NavLink[] =
     settings?.navLinks && settings.navLinks.length > 0 ? (settings.navLinks as NavLink[]) : DEFAULT_NAV_LINKS
+  const logo = settings?.logo
+  const logoUrl = logo && typeof logo === 'object' ? (logo as { url?: string }).url || null : null
 
-  return { settings, siteName, navLinks }
+  return { settings, siteName, navLinks, logoUrl }
 }

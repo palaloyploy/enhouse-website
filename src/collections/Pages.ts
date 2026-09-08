@@ -97,14 +97,31 @@ export const Pages: CollectionConfig = {
           slug: 'imageBanner',
           labels: { singular: 'Banner เต็มจอ + Text ทับรูป', plural: 'Banner เต็มจอ + Text ทับรูป' },
           fields: [
-            { name: 'image', type: 'upload', relationTo: 'media' },
+            {
+              name: 'layout',
+              type: 'select',
+              defaultValue: 'single',
+              label: 'รูปแบบ',
+              options: [
+                { label: 'รูปเดียวเต็มจอ', value: 'single' },
+                { label: 'คอลลาจหลายรูป + การ์ดข้อความทับ', value: 'collage' },
+              ],
+            },
+            { name: 'image', type: 'upload', relationTo: 'media', label: 'รูปภาพ (แบบรูปเดียว)' },
+            {
+              name: 'collageImages',
+              type: 'array',
+              label: 'รูปภาพ (แบบคอลลาจ ใส่ได้สูงสุด 6 รูป)',
+              maxRows: 6,
+              fields: [{ name: 'image', type: 'upload', relationTo: 'media', required: true }],
+            },
             { name: 'heading', type: 'text', required: true },
             { name: 'text', type: 'textarea' },
             ...ctaFields,
             {
               name: 'overlayColor',
               type: 'select',
-              label: 'สีทับรูป (สำหรับให้ตัวหนังสืออ่านง่าย)',
+              label: 'สีทับรูป (สำหรับให้ตัวหนังสืออ่านง่าย, แบบรูปเดียวเท่านั้น)',
               defaultValue: 'dark',
               options: [
                 { label: 'เข้ม (Dark)', value: 'dark' },
@@ -135,6 +152,26 @@ export const Pages: CollectionConfig = {
               label: 'คำที่ต้องการเน้นสีทอง (ต้องเป็นข้อความย่อยของหัวข้อหลัก)',
             },
             { name: 'subheading', type: 'textarea', label: 'คำอธิบายรอง' },
+            {
+              name: 'layout',
+              type: 'select',
+              defaultValue: 'centered',
+              label: 'รูปแบบ Hero',
+              options: [
+                { label: 'กึ่งกลาง (Centered)', value: 'centered' },
+                { label: '2 คอลัมน์ ข้อความซ้าย-รูปขวา (Split)', value: 'split' },
+              ],
+            },
+            {
+              name: 'visualStyle',
+              type: 'select',
+              defaultValue: 'photo',
+              label: 'ฝั่งขวา (เฉพาะแบบ Split)',
+              options: [
+                { label: 'รูปภาพ', value: 'photo' },
+                { label: 'โลโก้แบรนด์ (ตกแต่งอัตโนมัติ)', value: 'brandMark' },
+              ],
+            },
             { name: 'image', type: 'upload', relationTo: 'media' },
             {
               name: 'imageStyle',
@@ -252,15 +289,28 @@ export const Pages: CollectionConfig = {
           slug: 'bookingPromo',
           labels: { singular: 'โปรโมทจองคิว + ปฏิทิน', plural: 'โปรโมทจองคิว + ปฏิทิน' },
           fields: [
-            { name: 'heading', type: 'text', required: true },
-            { name: 'calendarNote', type: 'text', label: 'ข้อความเหนือปฏิทิน เช่น "เหลือที่ว่างเดือนนี้ 6 ที่"' },
+            { name: 'heading', type: 'text', required: true, label: 'หัวข้อบนสุด' },
+            {
+              name: 'freeSlotsLabel',
+              type: 'text',
+              defaultValue: 'เหลือสิทธิ์ตรวจฟรี',
+              label: 'ข้อความก่อนจำนวนสิทธิ์ที่เหลือ',
+            },
+            { name: 'totalSlots', type: 'number', defaultValue: 15, label: 'จำนวนสิทธิ์ทั้งหมด' },
+            { name: 'bookedSlots', type: 'number', defaultValue: 9, label: 'จำนวนที่จองแล้ว' },
+            { name: 'rightTitle', type: 'text', label: 'หัวข้อฝั่งขวา เช่น "Enhouse Leakage Audit"' },
+            { name: 'rightDescription', type: 'textarea', label: 'คำอธิบายฝั่งขวา' },
+            {
+              name: 'features',
+              type: 'array',
+              label: 'รายการจุดเด่น (มีหัวข้อ + คำอธิบาย)',
+              fields: [
+                { name: 'title', type: 'text', required: true },
+                { name: 'description', type: 'text' },
+              ],
+            },
             { name: 'originalPrice', type: 'text', label: 'ราคาปกติ เช่น "9,900"' },
             { name: 'badgeText', type: 'text', label: 'ป้ายโปรโมชัน เช่น "ฟรี 15 เคส"' },
-            {
-              name: 'bullets',
-              type: 'array',
-              fields: [{ name: 'text', type: 'text', required: true }],
-            },
             ...ctaFields,
           ],
         },
@@ -271,9 +321,34 @@ export const Pages: CollectionConfig = {
             { name: 'heading', type: 'text', required: true },
             { name: 'subheading', type: 'textarea' },
             {
+              name: 'businessListHeading',
+              type: 'text',
+              defaultValue: 'ธุรกิจที่เราดูแล',
+              label: 'หัวข้อลิสต์ฝั่งซ้าย',
+            },
+            {
+              name: 'businessTypes',
+              type: 'array',
+              label: 'ประเภทธุรกิจ (แสดงเป็นลิสต์เลขฝั่งซ้าย)',
+              fields: [
+                { name: 'title', type: 'text', required: true },
+                {
+                  name: 'points',
+                  type: 'array',
+                  fields: [{ name: 'text', type: 'text', required: true }],
+                },
+              ],
+            },
+            {
+              name: 'serviceLabel',
+              type: 'text',
+              defaultValue: 'คุณคือธุรกิจ',
+              label: 'หัวข้อเหนือปุ่มเลือกประเภทธุรกิจในฟอร์ม',
+            },
+            {
               name: 'serviceOptions',
               type: 'array',
-              label: 'ตัวเลือกบริการที่สนใจ (แสดงเป็นปุ่มเลือกในฟอร์ม)',
+              label: 'ตัวเลือกที่แสดงเป็นปุ่มเลือกในฟอร์ม',
               fields: [{ name: 'label', type: 'text', required: true }],
             },
           ],
@@ -406,6 +481,18 @@ export const Pages: CollectionConfig = {
                 { name: 'ctaUrl', type: 'text' },
               ],
             },
+          ],
+        },
+        {
+          slug: 'dualDiagram',
+          labels: { singular: 'ไดอะแกรมเปรียบเทียบ 2 คอลัมน์', plural: 'ไดอะแกรมเปรียบเทียบ 2 คอลัมน์' },
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            { name: 'subheading', type: 'textarea' },
+            { name: 'leftLabel', type: 'text', label: 'หัวข้อเล็กเหนือรูปฝั่งซ้าย' },
+            { name: 'leftImage', type: 'upload', relationTo: 'media', required: true, label: 'รูปฝั่งซ้าย' },
+            { name: 'rightLabel', type: 'text', label: 'หัวข้อเล็กเหนือรูปฝั่งขวา' },
+            { name: 'rightImage', type: 'upload', relationTo: 'media', required: true, label: 'รูปฝั่งขวา' },
           ],
         },
         {

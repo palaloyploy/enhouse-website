@@ -9,9 +9,33 @@ export const SiteSettings: GlobalConfig = {
   fields: [
     { name: 'siteName', type: 'text', label: 'ชื่อเว็บไซต์ (โลโก้ตัวอักษร)', defaultValue: 'enhouse.digital' },
     {
+      name: 'logo',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'โลโก้ (ถ้ามี จะใช้แทนโลโก้ตัวอักษรทั้งเว็บ)',
+    },
+    {
       name: 'navLinks',
       type: 'array',
       label: 'เมนู Navbar',
+      fields: [
+        { name: 'label', type: 'text', required: true },
+        { name: 'url', type: 'text', required: true },
+      ],
+    },
+    {
+      name: 'footerServices',
+      type: 'array',
+      label: 'Footer: คอลัมน์ "บริการ"',
+      fields: [
+        { name: 'label', type: 'text', required: true },
+        { name: 'url', type: 'text', required: true },
+      ],
+    },
+    {
+      name: 'footerPortfolio',
+      type: 'array',
+      label: 'Footer: คอลัมน์ "ผลงาน"',
       fields: [
         { name: 'label', type: 'text', required: true },
         { name: 'url', type: 'text', required: true },

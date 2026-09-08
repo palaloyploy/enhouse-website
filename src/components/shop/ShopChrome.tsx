@@ -12,7 +12,7 @@ export async function ShopChrome({ children }: { children: React.ReactNode }) {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
-  const [{ settings, siteName, navLinks }, categoriesResult, saleResult, discountResult] = await Promise.all([
+  const [{ settings, siteName, navLinks, logoUrl }, categoriesResult, saleResult, discountResult] = await Promise.all([
     getSiteSettings(),
     payload.find({ collection: 'categories', limit: 100, sort: 'name' }),
     payload.find({ collection: 'products', where: { compareAtPrice: { greater_than: 0 } }, limit: 1 }),
@@ -32,17 +32,15 @@ export async function ShopChrome({ children }: { children: React.ReactNode }) {
         </div>
       )}
       <Suspense fallback={null}>
-        <ShopNavbar siteName={siteName} categories={categories} hasSale={saleResult.totalDocs > 0} />
+        <ShopNavbar siteName={siteName} logoUrl={logoUrl} categories={categories} hasSale={saleResult.totalDocs > 0} />
       </Suspense>
       <main>{children}</main>
       <Footer
         siteName={siteName}
         navLinks={navLinks}
-        companyName={settings?.contact?.companyName}
-        address={settings?.contact?.address}
-        phone={settings?.contact?.phone}
-        lineUrl={settings?.contact?.lineUrl}
-        email={settings?.contact?.email}
+        logoUrl={logoUrl}
+        footerServices={settings?.footerServices}
+        footerPortfolio={settings?.footerPortfolio}
       />
     </div>
   )
