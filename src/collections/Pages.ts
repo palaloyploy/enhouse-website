@@ -1,0 +1,465 @@
+import type { CollectionConfig, Field } from 'payload'
+
+const ctaFields: Field[] = [
+  { name: 'ctaLabel', type: 'text', label: 'ปุ่ม (ถ้ามี)' },
+  { name: 'ctaUrl', type: 'text', label: 'ลิงก์ปุ่ม' },
+]
+
+export const Pages: CollectionConfig = {
+  slug: 'pages',
+  admin: {
+    group: 'เว็บไซต์',
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'slug', 'updatedAt'],
+    description: 'สร้างและแก้ไขหน้าเว็บ พร้อมเพิ่ม Section เองได้จาก layout ด้านล่าง',
+  },
+  access: {
+    read: () => true,
+  },
+  versions: {
+    drafts: true,
+  },
+  fields: [
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+      label: 'ชื่อหน้า',
+    },
+    {
+      name: 'slug',
+      type: 'text',
+      required: true,
+      unique: true,
+      label: 'Slug (URL)',
+      admin: {
+        description: 'เช่น "about", "csr" — หน้าแรกให้ใช้ "home"',
+      },
+    },
+    {
+      type: 'group',
+      name: 'meta',
+      label: 'SEO',
+      fields: [
+        { name: 'metaTitle', type: 'text', label: 'Meta title' },
+        { name: 'metaDescription', type: 'textarea', label: 'Meta description' },
+        { name: 'ogImage', type: 'upload', relationTo: 'media', label: 'OG image' },
+      ],
+    },
+    {
+      name: 'layout',
+      type: 'blocks',
+      label: 'เนื้อหาในหน้า (Section)',
+      labels: {
+        singular: 'Section',
+        plural: 'Sections',
+      },
+      blocks: [
+        // ---------- Basic image/text blocks (มีอยู่เดิม) ----------
+        {
+          slug: 'imageLeftTextRight',
+          labels: { singular: 'รูปซ้าย / Text ขวา', plural: 'รูปซ้าย / Text ขวา' },
+          fields: [
+            { name: 'image', type: 'upload', relationTo: 'media' },
+            { name: 'heading', type: 'text', required: true },
+            { name: 'text', type: 'textarea' },
+            ...ctaFields,
+          ],
+        },
+        {
+          slug: 'imageTopTextBottom',
+          labels: { singular: 'รูปบน / Text ล่าง', plural: 'รูปบน / Text ล่าง' },
+          fields: [
+            { name: 'image', type: 'upload', relationTo: 'media' },
+            { name: 'heading', type: 'text', required: true },
+            { name: 'text', type: 'textarea' },
+            ...ctaFields,
+          ],
+        },
+        {
+          slug: 'imageGallery',
+          labels: { singular: 'Gallery (หลายรูป)', plural: 'Gallery (หลายรูป)' },
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            { name: 'text', type: 'textarea' },
+            {
+              name: 'images',
+              type: 'array',
+              label: 'รูปภาพ',
+              fields: [
+                { name: 'image', type: 'upload', relationTo: 'media' },
+                { name: 'caption', type: 'text', label: 'คำบรรยายใต้รูป (ถ้ามี)' },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'imageBanner',
+          labels: { singular: 'Banner เต็มจอ + Text ทับรูป', plural: 'Banner เต็มจอ + Text ทับรูป' },
+          fields: [
+            { name: 'image', type: 'upload', relationTo: 'media' },
+            { name: 'heading', type: 'text', required: true },
+            { name: 'text', type: 'textarea' },
+            ...ctaFields,
+            {
+              name: 'overlayColor',
+              type: 'select',
+              label: 'สีทับรูป (สำหรับให้ตัวหนังสืออ่านง่าย)',
+              defaultValue: 'dark',
+              options: [
+                { label: 'เข้ม (Dark)', value: 'dark' },
+                { label: 'แบรนด์ (Gold)', value: 'gold' },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'textOnly',
+          labels: { singular: 'Text อย่างเดียว', plural: 'Text อย่างเดียว' },
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            { name: 'text', type: 'textarea' },
+          ],
+        },
+
+        // ---------- Section blocks ใหม่ (ตาม design enhouse.digital) ----------
+        {
+          slug: 'hero',
+          labels: { singular: 'Hero (หัวหน้า)', plural: 'Hero (หัวหน้า)' },
+          fields: [
+            { name: 'tag', type: 'text', label: 'Eyebrow / แท็กเล็กด้านบน' },
+            { name: 'heading', type: 'text', required: true, label: 'หัวข้อหลัก' },
+            {
+              name: 'highlightText',
+              type: 'text',
+              label: 'คำที่ต้องการเน้นสีทอง (ต้องเป็นข้อความย่อยของหัวข้อหลัก)',
+            },
+            { name: 'subheading', type: 'textarea', label: 'คำอธิบายรอง' },
+            { name: 'image', type: 'upload', relationTo: 'media' },
+            {
+              name: 'imageStyle',
+              type: 'select',
+              defaultValue: 'rounded',
+              options: [
+                { label: 'มุมโค้ง', value: 'rounded' },
+                { label: 'วงกลม', value: 'circle' },
+              ],
+            },
+            { name: 'primaryCtaLabel', type: 'text', label: 'ปุ่มหลัก' },
+            { name: 'primaryCtaUrl', type: 'text', label: 'ลิงก์ปุ่มหลัก' },
+            { name: 'secondaryCtaLabel', type: 'text', label: 'ปุ่มรอง' },
+            { name: 'secondaryCtaUrl', type: 'text', label: 'ลิงก์ปุ่มรอง' },
+          ],
+        },
+        {
+          slug: 'logoStrip',
+          labels: { singular: 'แถบโลโก้ลูกค้า', plural: 'แถบโลโก้ลูกค้า' },
+          fields: [
+            { name: 'heading', type: 'text', label: 'หัวข้อ เช่น "กลุ่มธุรกิจที่เรารู้จัก"' },
+            {
+              name: 'logos',
+              type: 'array',
+              label: 'โลโก้',
+              fields: [
+                { name: 'logo', type: 'upload', relationTo: 'media', required: true },
+                { name: 'url', type: 'text', label: 'ลิงก์ (ถ้ามี)' },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'iconFeatureGrid',
+          labels: { singular: 'การ์ดไอคอน + รายการ (บริการ/จุดเด่น)', plural: 'การ์ดไอคอน + รายการ' },
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            { name: 'subheading', type: 'textarea' },
+            {
+              name: 'columns',
+              type: 'select',
+              defaultValue: '3',
+              options: [
+                { label: '2 คอลัมน์', value: '2' },
+                { label: '3 คอลัมน์', value: '3' },
+                { label: '4 คอลัมน์', value: '4' },
+              ],
+            },
+            {
+              name: 'items',
+              type: 'array',
+              required: true,
+              minRows: 1,
+              fields: [
+                { name: 'icon', type: 'upload', relationTo: 'media' },
+                { name: 'title', type: 'text', required: true },
+                { name: 'description', type: 'textarea' },
+                {
+                  name: 'points',
+                  type: 'array',
+                  label: 'รายการย่อย (ถ้ามี)',
+                  fields: [{ name: 'text', type: 'text', required: true }],
+                },
+              ],
+            },
+            { name: 'footnote', type: 'text', label: 'ข้อความปิดท้าย (ถ้ามี)' },
+            ...ctaFields,
+          ],
+        },
+        {
+          slug: 'featureShowcase',
+          labels: {
+            singular: 'จุดเด่นบริการ + รูปประกอบ (Cross Channel)',
+            plural: 'จุดเด่นบริการ + รูปประกอบ',
+          },
+          fields: [
+            { name: 'eyebrow', type: 'text' },
+            { name: 'heading', type: 'text', required: true },
+            { name: 'text', type: 'textarea' },
+            {
+              name: 'points',
+              type: 'array',
+              fields: [{ name: 'text', type: 'text', required: true }],
+            },
+            {
+              name: 'images',
+              type: 'array',
+              label: 'รูปประกอบ (เช่น ภาพหน้าจอมือถือ)',
+              fields: [{ name: 'image', type: 'upload', relationTo: 'media', required: true }],
+            },
+            ...ctaFields,
+          ],
+        },
+        {
+          slug: 'processSteps',
+          labels: { singular: 'ขั้นตอนทำงาน (พื้นเข้ม, มีลำดับ)', plural: 'ขั้นตอนทำงาน (พื้นเข้ม)' },
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            { name: 'subheading', type: 'textarea' },
+            {
+              name: 'steps',
+              type: 'array',
+              required: true,
+              minRows: 1,
+              fields: [
+                { name: 'number', type: 'text', label: 'ลำดับ เช่น "01"' },
+                { name: 'title', type: 'text', required: true },
+                { name: 'description', type: 'textarea' },
+              ],
+            },
+            ...ctaFields,
+          ],
+        },
+        {
+          slug: 'bookingPromo',
+          labels: { singular: 'โปรโมทจองคิว + ปฏิทิน', plural: 'โปรโมทจองคิว + ปฏิทิน' },
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            { name: 'calendarNote', type: 'text', label: 'ข้อความเหนือปฏิทิน เช่น "เหลือที่ว่างเดือนนี้ 6 ที่"' },
+            { name: 'originalPrice', type: 'text', label: 'ราคาปกติ เช่น "9,900"' },
+            { name: 'badgeText', type: 'text', label: 'ป้ายโปรโมชัน เช่น "ฟรี 15 เคส"' },
+            {
+              name: 'bullets',
+              type: 'array',
+              fields: [{ name: 'text', type: 'text', required: true }],
+            },
+            ...ctaFields,
+          ],
+        },
+        {
+          slug: 'leadFormSection',
+          labels: { singular: 'ฟอร์มจองคิว/นัดหมาย', plural: 'ฟอร์มจองคิว/นัดหมาย' },
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            { name: 'subheading', type: 'textarea' },
+            {
+              name: 'serviceOptions',
+              type: 'array',
+              label: 'ตัวเลือกบริการที่สนใจ (แสดงเป็นปุ่มเลือกในฟอร์ม)',
+              fields: [{ name: 'label', type: 'text', required: true }],
+            },
+          ],
+        },
+        {
+          slug: 'timeline',
+          labels: { singular: 'ไทม์ไลน์ (ปีต่อปี)', plural: 'ไทม์ไลน์ (ปีต่อปี)' },
+          fields: [
+            { name: 'heading', type: 'text' },
+            {
+              name: 'items',
+              type: 'array',
+              required: true,
+              minRows: 1,
+              fields: [
+                { name: 'year', type: 'text', required: true },
+                { name: 'title', type: 'text', required: true },
+                { name: 'description', type: 'textarea' },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'caseStudyList',
+          labels: { singular: 'รายการผลงาน (รูปหลายใบ + รายละเอียด)', plural: 'รายการผลงาน' },
+          fields: [
+            { name: 'heading', type: 'text' },
+            {
+              name: 'items',
+              type: 'array',
+              required: true,
+              minRows: 1,
+              fields: [
+                { name: 'title', type: 'text', required: true },
+                { name: 'description', type: 'textarea' },
+                {
+                  name: 'points',
+                  type: 'array',
+                  fields: [{ name: 'text', type: 'text', required: true }],
+                },
+                {
+                  name: 'images',
+                  type: 'array',
+                  label: 'รูปภาพ (แสดงเป็นชุดคอลลาจ)',
+                  fields: [{ name: 'image', type: 'upload', relationTo: 'media', required: true }],
+                },
+                { name: 'linkLabel', type: 'text' },
+                { name: 'linkUrl', type: 'text' },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'faq',
+          labels: { singular: 'คำถามที่พบบ่อย (FAQ)', plural: 'คำถามที่พบบ่อย (FAQ)' },
+          fields: [
+            { name: 'heading', type: 'text', defaultValue: 'คำถามที่พบบ่อย' },
+            {
+              name: 'items',
+              type: 'array',
+              required: true,
+              minRows: 1,
+              fields: [
+                { name: 'question', type: 'text', required: true },
+                { name: 'answer', type: 'textarea', required: true },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'ctaBanner',
+          labels: { singular: 'แบนเนอร์ชวนทำนัด (CTA)', plural: 'แบนเนอร์ชวนทำนัด (CTA)' },
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            { name: 'text', type: 'textarea' },
+            ...ctaFields,
+            {
+              name: 'theme',
+              type: 'select',
+              defaultValue: 'gold',
+              options: [
+                { label: 'ทอง', value: 'gold' },
+                { label: 'เข้ม', value: 'dark' },
+              ],
+            },
+            {
+              name: 'size',
+              type: 'select',
+              defaultValue: 'full',
+              options: [
+                { label: 'เต็มความกว้าง', value: 'full' },
+                { label: 'กล่องเล็ก', value: 'compact' },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'pricingPackages',
+          labels: { singular: 'แพ็กเกจราคา', plural: 'แพ็กเกจราคา' },
+          fields: [
+            { name: 'heading', type: 'text' },
+            { name: 'subheading', type: 'textarea' },
+            {
+              name: 'packages',
+              type: 'array',
+              required: true,
+              minRows: 1,
+              fields: [
+                { name: 'name', type: 'text', required: true },
+                { name: 'subtitle', type: 'text' },
+                { name: 'priceNote', type: 'text', label: 'ข้อความราคา' },
+                {
+                  name: 'features',
+                  type: 'array',
+                  fields: [{ name: 'text', type: 'text', required: true }],
+                },
+                { name: 'ctaLabel', type: 'text' },
+                { name: 'ctaUrl', type: 'text' },
+                { name: 'highlighted', type: 'checkbox', label: 'เน้น (พื้นเข้ม)' },
+              ],
+            },
+            {
+              type: 'group',
+              name: 'additionalNote',
+              label: 'แบนเนอร์บริการเสริม (ด้านล่าง)',
+              fields: [
+                { name: 'heading', type: 'text' },
+                { name: 'text', type: 'textarea' },
+                { name: 'ctaLabel', type: 'text' },
+                { name: 'ctaUrl', type: 'text' },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'diagramImage',
+          labels: { singular: 'ไดอะแกรม/ภาพประกอบเต็มความกว้าง', plural: 'ไดอะแกรม/ภาพประกอบ' },
+          fields: [
+            { name: 'heading', type: 'text' },
+            { name: 'subheading', type: 'textarea' },
+            { name: 'image', type: 'upload', relationTo: 'media', required: true },
+            { name: 'caption', type: 'text' },
+          ],
+        },
+        {
+          slug: 'productGrid',
+          labels: { singular: 'สินค้าจากร้านค้า (Product Grid)', plural: 'สินค้าจากร้านค้า' },
+          fields: [
+            { name: 'heading', type: 'text' },
+            { name: 'subheading', type: 'textarea' },
+            {
+              name: 'mode',
+              type: 'select',
+              defaultValue: 'featured',
+              options: [
+                { label: 'สินค้าแนะนำ', value: 'featured' },
+                { label: 'สินค้าล่าสุดทั้งหมด', value: 'all' },
+                { label: 'เลือกสินค้าเอง', value: 'selected' },
+              ],
+            },
+            { name: 'limit', type: 'number', defaultValue: 4, label: 'จำนวนที่แสดง (โหมดแนะนำ/ล่าสุด)' },
+            {
+              name: 'products',
+              type: 'relationship',
+              relationTo: 'products',
+              hasMany: true,
+              label: 'เลือกสินค้า (โหมดเลือกเอง)',
+            },
+            ...ctaFields,
+          ],
+        },
+        {
+          slug: 'adsPortfolioGrid',
+          labels: { singular: 'กริดผลงานโฆษณา (Ads Portfolio)', plural: 'กริดผลงานโฆษณา' },
+          fields: [
+            { name: 'heading', type: 'text' },
+            {
+              name: 'images',
+              type: 'array',
+              required: true,
+              minRows: 1,
+              fields: [{ name: 'image', type: 'upload', relationTo: 'media', required: true }],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+}

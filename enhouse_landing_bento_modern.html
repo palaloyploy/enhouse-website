@@ -1,0 +1,143 @@
+<link href="https://fonts.googleapis.com/css2?family=Taviraj:ital,wght@0,600;1,600&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+.ehm *{box-sizing:border-box}
+.ehm{font-family:'IBM Plex Sans Thai',sans-serif}
+.ehm .disp{font-family:'Taviraj',serif}
+.ehm .mono{font-family:'IBM Plex Mono',monospace}
+.tile{transition:transform .2s ease,border-color .2s ease}
+.tile:hover{transform:translateY(-3px)}
+.cta-btn{transition:transform .15s ease}
+.cta-btn:hover{transform:translateY(-1px)}
+.cta-btn:active{transform:scale(.98)}
+@media (prefers-reduced-motion: no-preference){
+  .fu{opacity:0;animation:fu .5s ease forwards}
+  .fu1{animation-delay:.05s}.fu2{animation-delay:.15s}.fu3{animation-delay:.25s}.fu4{animation-delay:.35s}
+  @keyframes fu{from{opacity:0}to{opacity:1}}
+  .cell{opacity:0;animation:cp .3s ease forwards}
+  @keyframes cp{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+  .live-dot{animation:ld 1.8s ease-in-out infinite}
+  @keyframes ld{0%,100%{opacity:.35}50%{opacity:1}}
+  .marq-track{animation:mq 18s linear infinite}
+  @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+}
+</style>
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">ตัวอย่างหน้า Landing Page ของ Enhouse ดีไซน์แบบ bento grid ทันสมัย พร้อมตัวนับสิทธิ์ Free Audit และ marquee อุตสาหกรรมลูกค้า</h2>
+<div class="ehm" style="background:#F3F1EA;color:#14181F;border-radius:14px;overflow:hidden;border:0.5px solid #E4E1D6">
+
+<div style="display:flex;align-items:center;justify-content:space-between;padding:20px 28px">
+  <span class="mono" style="font-size:16px">enhouse.</span>
+  <span class="cta-btn" style="background:#14181F;color:#F3F1EA;font-size:13px;padding:9px 18px;border-radius:100px;cursor:pointer">จองคิว audit ฟรี</span>
+</div>
+
+<div style="display:grid;grid-template-columns:1.05fr 0.95fr;gap:20px;padding:8px 28px 36px">
+  <div>
+    <div class="fu fu1 mono" style="font-size:12px;color:#4338CA;margin-bottom:16px">Marketing operation partner</div>
+    <div class="fu fu2 disp" style="font-size:38px;font-weight:600;line-height:1.3;margin-bottom:16px">ทีมการตลาดที่อยู่<br><span style="font-style:italic;color:#4338CA">ในบ้านคุณ</span>จริง ๆ</div>
+    <div class="fu fu3" style="font-size:14px;color:#5B5F55;line-height:1.7;margin-bottom:22px;max-width:420px">วางระบบการตลาดให้ทำงานเหมือนทีมในองค์กรคุณเอง ตั้งแต่ SEO ไปจนถึง performance ads วัดผลได้ทุกบาทที่ใช้จ่าย</div>
+    <div class="fu fu4" style="display:flex;gap:10px;margin-bottom:28px">
+      <span class="cta-btn" style="background:#4338CA;color:#F3F1EA;font-size:14px;padding:12px 20px;border-radius:100px;cursor:pointer">เริ่มต้น audit ฟรี</span>
+      <span class="cta-btn" style="border:0.5px solid #C7C3B6;font-size:14px;padding:12px 20px;border-radius:100px;cursor:pointer">ดูเคสความสำเร็จ</span>
+    </div>
+    <div style="overflow:hidden;border-top:0.5px solid #E4E1D6;padding-top:16px">
+      <div class="mono" style="font-size:11px;color:#8A8A82;margin-bottom:10px">อุตสาหกรรมที่เราดูแล</div>
+      <div style="display:flex;width:max-content">
+        <div class="marq-track" style="display:flex;gap:28px;font-size:13px;color:#5B5F55">
+          <span>อสังหาริมทรัพย์</span><span>การศึกษา</span><span>สุขภาพ</span><span>อีคอมเมิร์ซ</span><span>การเงิน</span>
+          <span>อสังหาริมทรัพย์</span><span>การศึกษา</span><span>สุขภาพ</span><span>อีคอมเมิร์ซ</span><span>การเงิน</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#14181F;border-radius:16px;padding:22px;color:#F3F1EA">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <span style="font-size:14px">โปรแกรม free audit</span>
+      <span style="background:#2A2118;color:#F0AA5B;font-size:12px;padding:4px 10px;border-radius:100px">เหลือ 5 สิทธิ์</span>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+      <span id="cnt2" class="mono" style="font-size:34px;font-weight:500;color:#F0AA5B">0 / 15</span>
+      <span style="font-size:13px;color:#9CA39A">สิทธิ์ถูกจองแล้ว</span>
+    </div>
+    <div style="font-size:12px;color:#7D8378;margin-bottom:14px;display:flex;align-items:center;gap:6px"><span class="live-dot" style="width:6px;height:6px;background:#8FC15C;border-radius:50%;display:inline-block"></span>อัปเดตล่าสุดเมื่อ 3 นาทีที่แล้ว</div>
+    <div id="grid2" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:16px"></div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
+      <div style="background:#1D2330;border-radius:8px;padding:8px 10px;font-size:13px;display:flex;justify-content:space-between"><span>พฤ 10 ก.ค.</span><span style="color:#9CA39A">14:00</span></div>
+      <div style="background:#1D2330;border-radius:8px;padding:8px 10px;font-size:13px;display:flex;justify-content:space-between"><span>ศ 11 ก.ค.</span><span style="color:#9CA39A">10:00</span></div>
+    </div>
+    <div class="cta-btn" style="background:#F0AA5B;color:#412402;text-align:center;font-size:14px;padding:12px;border-radius:100px;cursor:pointer">เลือกวันที่ว่าง →</div>
+  </div>
+</div>
+
+<div style="padding:0 28px 36px;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:150px 150px;gap:14px;grid-template-areas:'a a b c' 'd d d c'">
+  <div class="tile" style="grid-area:a;background:#FFFFFF;border:0.5px solid #E4E1D6;border-radius:14px;padding:18px">
+    <i class="ti ti-search" aria-hidden="true" style="font-size:20px;color:#4338CA"></i>
+    <div style="font-size:15px;font-weight:600;margin:10px 0 4px">SEO ที่วัดผลได้</div>
+    <div style="font-size:13px;color:#5B5F55;line-height:1.6">ติดคำค้นหา enhouse และ marketing operation บน Google</div>
+  </div>
+  <div class="tile" style="grid-area:b;background:#14181F;color:#F3F1EA;border-radius:14px;padding:18px">
+    <i class="ti ti-target-arrow" aria-hidden="true" style="font-size:20px;color:#F0AA5B"></i>
+    <div style="font-size:15px;font-weight:600;margin:10px 0 4px">Performance ads</div>
+    <div style="font-size:12px;color:#9CA39A;line-height:1.5">บริหารงบให้คุ้มทุกบาท</div>
+  </div>
+  <div class="tile" style="grid-area:c;background:#FFFFFF;border:0.5px solid #E4E1D6;border-radius:14px;padding:18px;display:flex;flex-direction:column">
+    <i class="ti ti-chart-bar" aria-hidden="true" style="font-size:20px;color:#4338CA"></i>
+    <div style="font-size:15px;font-weight:600;margin:10px 0 8px">Marketing ops dashboard</div>
+    <div style="display:flex;align-items:flex-end;gap:5px;flex:1;padding-bottom:4px">
+      <div style="width:12px;height:30%;background:#CECBF6;border-radius:3px"></div>
+      <div style="width:12px;height:55%;background:#AFA9EC;border-radius:3px"></div>
+      <div style="width:12px;height:40%;background:#CECBF6;border-radius:3px"></div>
+      <div style="width:12px;height:75%;background:#7F77DD;border-radius:3px"></div>
+      <div style="width:12px;height:50%;background:#AFA9EC;border-radius:3px"></div>
+    </div>
+    <div style="font-size:12px;color:#5B5F55;margin-top:8px">เห็นผลลัพธ์แบบ real-time</div>
+  </div>
+  <div class="tile" style="grid-area:d;background:#FFFFFF;border:0.5px solid #E4E1D6;border-radius:14px;padding:18px;display:flex;align-items:center;gap:16px">
+    <i class="ti ti-file-text" aria-hidden="true" style="font-size:20px;color:#4338CA"></i>
+    <div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:4px">คอนเทนต์คุณภาพ</div>
+      <div style="font-size:13px;color:#5B5F55">เขียนบทความให้ทั้ง SEO และคนอ่านชอบ ไม่ใช่แค่ยัดคีย์เวิร์ด</div>
+    </div>
+  </div>
+</div>
+
+<div style="background:#4338CA;color:#EEEDFE;padding:40px 28px;border-radius:0">
+  <div class="mono" style="font-size:12px;color:#AFA9EC;margin-bottom:10px">CSR</div>
+  <div class="disp" style="font-size:24px;font-weight:600;font-style:italic;line-height:1.5;max-width:520px">เราโตไปพร้อมสังคม ทุกไตรมาสทีมงานสละเวลาช่วยงานการตลาดให้มูลนิธิ โดยไม่คิดค่าใช้จ่าย</div>
+  <div style="font-size:13px;margin-top:16px;text-decoration:underline">อ่านเรื่องราว CSR ของเรา →</div>
+</div>
+
+<div style="padding:40px 28px;background:#F3F1EA">
+  <div style="font-size:18px;font-weight:600;margin-bottom:18px">จองสิทธิ์ free audit วันนี้</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <input placeholder="ชื่อ-นามสกุล" style="padding:12px 16px;border-radius:100px;border:0.5px solid #D6D2C4;font-size:13px;background:#FFFFFF">
+    <input placeholder="เบอร์โทรศัพท์" style="padding:12px 16px;border-radius:100px;border:0.5px solid #D6D2C4;font-size:13px;background:#FFFFFF">
+  </div>
+  <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#5B5F55;margin:12px 0 16px"><input type="checkbox">ฉันยินยอมให้เก็บข้อมูลตามนโยบายความเป็นส่วนตัว (PDPA)</label>
+  <div class="cta-btn" style="background:#14181F;color:#F3F1EA;text-align:center;font-size:14px;padding:13px;border-radius:100px;cursor:pointer">ส่งข้อมูล</div>
+</div>
+
+<div style="padding:24px 28px;font-size:12px;color:#8A8A82;display:flex;justify-content:space-between;border-top:0.5px solid #E4E1D6">
+  <span>© 2026 enhouse.</span>
+  <span>นโยบายความเป็นส่วนตัว · คุกกี้ · TH/EN</span>
+</div>
+
+</div>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var grid = document.getElementById('grid2');
+  var cnt = document.getElementById('cnt2');
+  var filled=10, total=15;
+  for(var i=0;i<total;i++){
+    var d=document.createElement('div');
+    d.className = i<filled ? 'cell' : '';
+    d.style.aspectRatio='1'; d.style.borderRadius='4px';
+    if(i<filled){ d.style.background='#F0AA5B'; d.style.animationDelay=(i*0.06)+'s'; }
+    else { d.style.border='0.5px solid #333B47'; }
+    grid.appendChild(d);
+  }
+  if(reduce){ cnt.textContent = filled+' / '+total; return; }
+  var n=0;
+  var iv=setInterval(function(){ n++; cnt.textContent=n+' / '+total; if(n>=filled) clearInterval(iv); },70);
+})();
+</script>

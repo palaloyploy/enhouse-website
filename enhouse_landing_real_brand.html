@@ -1,0 +1,136 @@
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;700&family=Sarabun:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+.ehr *{box-sizing:border-box}
+.ehr{font-family:'Sarabun',sans-serif}
+.ehr .disp{font-family:'Kanit',sans-serif}
+.tile{transition:transform .2s ease}
+.tile:hover{transform:translateY(-3px)}
+.cta-btn{transition:transform .15s ease}
+.cta-btn:hover{transform:translateY(-1px)}
+.cta-btn:active{transform:scale(.98)}
+.bar{display:flex;gap:4px;align-items:center;margin:10px 0 14px}
+.bar .l{width:38px;height:5px;background:#D2202B;border-radius:2px}
+.bar .s{width:8px;height:5px;background:#D2202B;border-radius:2px}
+@media (prefers-reduced-motion: no-preference){
+  .cell{opacity:0;animation:cp .3s ease forwards}
+  @keyframes cp{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+  .live-dot{animation:ld 1.8s ease-in-out infinite}
+  @keyframes ld{0%,100%{opacity:.35}50%{opacity:1}}
+}
+</style>
+<h2 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">ตัวอย่างหน้า Landing Page ของ enhouse.digital ตามแบรนด์จริง แสดงจุดขาย Revenue Leakage และตัวนับสิทธิ์ Free Audit 15 เคส</h2>
+<div class="ehr" style="background:#FFFFFF;color:#1E1E1E;border-radius:14px;overflow:hidden;border:0.5px solid #E7E5E0">
+
+<div style="display:flex;align-items:center;justify-content:space-between;padding:20px 28px">
+  <div style="display:flex;align-items:baseline;gap:4px">
+    <span class="disp" style="font-size:18px;font-weight:700">enhouse</span>
+    <span style="font-size:14px;color:#5B5F55">.digital</span>
+  </div>
+  <span class="cta-btn" style="background:#D2202B;color:#FFFFFF;font-size:13px;padding:9px 18px;border-radius:100px;cursor:pointer">จองสิทธิ์ audit ฟรี</span>
+</div>
+
+<div style="position:relative;padding:20px 28px 40px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:24px;align-items:center;overflow:hidden">
+  <div style="position:absolute;top:-40px;right:120px;width:90px;height:90px;background:#F2F2EF;border-radius:50%;z-index:0"></div>
+  <div style="position:absolute;bottom:10px;left:60px;width:14px;height:14px;background:#F7941D;border-radius:4px;z-index:0"></div>
+
+  <div style="position:relative;z-index:1">
+    <div class="disp" style="font-size:13px;font-weight:600;color:#163863">Inhouse marketing operations</div>
+    <div class="disp" style="font-size:32px;font-weight:700;line-height:1.35;margin-top:10px">มองเห็นรอยรั่วของรายได้<br>ก่อนเสียงบโฆษณาเพิ่ม</div>
+    <div class="bar"><div class="l"></div><div class="s"></div></div>
+    <div style="font-size:14px;color:#5B5F55;line-height:1.7;margin-bottom:22px;max-width:420px">เราตรวจ 9 จุดใน customer journey เพื่อหาว่า lead หลุดตรงไหน ก่อนวางระบบ marketing operations ที่ทำงานเหมือนทีมในบ้านคุณ</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <span class="cta-btn" style="background:#D2202B;color:#FFFFFF;font-size:14px;padding:12px 20px;border-radius:100px;cursor:pointer">ฟรี! สำหรับ 15 เคส (มูลค่า 9,900.-)</span>
+      <span class="cta-btn" style="border:0.5px solid #C7C3B6;font-size:14px;padding:12px 20px;border-radius:100px;cursor:pointer">ดูวิธีการตรวจ</span>
+    </div>
+  </div>
+
+  <div style="position:relative;z-index:1;background:#FFFFFF;border:0.5px solid #E7E5E0;border-radius:16px;padding:22px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <span style="font-size:14px;font-weight:500">โปรแกรม free audit</span>
+      <span style="background:#FBE4C8;color:#8A4A0C;font-size:12px;padding:4px 10px;border-radius:100px">เหลือ 5 สิทธิ์</span>
+    </div>
+    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+      <span id="cnt3" class="disp" style="font-size:34px;font-weight:700;color:#D2202B">0 / 15</span>
+      <span style="font-size:13px;color:#5B5F55">สิทธิ์ถูกจองแล้ว</span>
+    </div>
+    <div style="font-size:12px;color:#8A8A82;margin-bottom:14px;display:flex;align-items:center;gap:6px"><span class="live-dot" style="width:6px;height:6px;background:#639922;border-radius:50%;display:inline-block"></span>อัปเดตล่าสุดเมื่อ 3 นาทีที่แล้ว</div>
+    <div id="grid3" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:16px"></div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
+      <div style="background:#F7F6F2;border-radius:8px;padding:8px 10px;font-size:13px;display:flex;justify-content:space-between"><span>พฤ 10 ก.ค.</span><span style="color:#5B5F55">14:00</span></div>
+      <div style="background:#F7F6F2;border-radius:8px;padding:8px 10px;font-size:13px;display:flex;justify-content:space-between"><span>ศ 11 ก.ค.</span><span style="color:#5B5F55">10:00</span></div>
+    </div>
+    <div class="cta-btn" style="background:#163863;color:#FFFFFF;text-align:center;font-size:14px;padding:12px;border-radius:100px;cursor:pointer">เลือกวันที่ว่าง →</div>
+  </div>
+</div>
+
+<div style="padding:8px 28px 40px">
+  <div class="disp" style="font-size:22px;font-weight:700">ตรวจว่ารายได้รั่วตรงไหน<br>ใน customer journey</div>
+  <div class="bar"><div class="l"></div><div class="s"></div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 24px">
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid #EFEDE6"><span style="color:#D2202B;font-weight:600;min-width:18px">1</span><div><b>Traffic source</b><div style="font-size:13px;color:#5B5F55">คุณภาพ traffic และแหล่งที่มาของ lead</div></div></div>
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid #EFEDE6"><span style="color:#D2202B;font-weight:600;min-width:18px">2</span><div><b>Customer journey</b><div style="font-size:13px;color:#5B5F55">ความต่อเนื่องของทุก touchpoint</div></div></div>
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid #EFEDE6"><span style="color:#D2202B;font-weight:600;min-width:18px">3</span><div><b>Creative & message</b><div style="font-size:13px;color:#5B5F55">เนื้อหาโฆษณาและการสื่อสารกับลูกค้า</div></div></div>
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid #EFEDE6"><span style="color:#D2202B;font-weight:600;min-width:18px">4</span><div><b>Tracking & data</b><div style="font-size:13px;color:#5B5F55">pixel, event และ conversion tracking</div></div></div>
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid #EFEDE6"><span style="color:#D2202B;font-weight:600;min-width:18px">5</span><div><b>Follow-up system</b><div style="font-size:13px;color:#5B5F55">การติดตามลูกค้าและการยิงซ้ำ</div></div></div>
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid #EFEDE6"><span style="color:#D2202B;font-weight:600;min-width:18px">6</span><div><b>Website & landing page</b><div style="font-size:13px;color:#5B5F55">ความน่าเชื่อถือและจุดเก็บ lead</div></div></div>
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid #EFEDE6"><span style="color:#D2202B;font-weight:600;min-width:18px">7</span><div><b>Portfolio & proof</b><div style="font-size:13px;color:#5B5F55">รีวิวผลงานและหลักฐานความน่าเชื่อถือ</div></div></div>
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:0.5px solid #EFEDE6"><span style="color:#D2202B;font-weight:600;min-width:18px">8</span><div><b>Lead qualification</b><div style="font-size:13px;color:#5B5F55">คุณภาพ lead และการคัดกรองลูกค้า</div></div></div>
+    <div style="display:flex;gap:12px;padding:10px 0"><span style="color:#D2202B;font-weight:600;min-width:18px">9</span><div><b>Chat & consult</b><div style="font-size:13px;color:#5B5F55">การตอบแชทและการให้คำปรึกษา</div></div></div>
+  </div>
+</div>
+
+<div style="padding:0 28px 40px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+  <div class="tile" style="border:0.5px solid #E7E5E0;border-radius:12px;overflow:hidden">
+    <div style="background:#D2202B;color:#FFFFFF;padding:12px 16px;font-size:14px;font-weight:600">Audit revenue leakage</div>
+    <div style="padding:16px;font-size:13px;color:#5B5F55;line-height:1.6">ตรวจว่ารายได้กำลังรั่วตรงไหน ก่อนเพิ่มงบโฆษณา</div>
+  </div>
+  <div class="tile" style="border:0.5px solid #E7E5E0;border-radius:12px;overflow:hidden">
+    <div style="background:#163863;color:#FFFFFF;padding:12px 16px;font-size:14px;font-weight:600">Build marketing operations</div>
+    <div style="padding:16px;font-size:13px;color:#5B5F55;line-height:1.6">วางระบบให้ marketing, sales และ data ทำงานเชื่อมกัน</div>
+  </div>
+  <div class="tile" style="border:0.5px solid #E7E5E0;border-radius:12px;overflow:hidden">
+    <div style="background:#F7941D;color:#FFFFFF;padding:12px 16px;font-size:14px;font-weight:600">Revenue optimization</div>
+    <div style="padding:16px;font-size:13px;color:#5B5F55;line-height:1.6">วัดผล วิเคราะห์ และพัฒนาระบบอย่างต่อเนื่อง</div>
+  </div>
+</div>
+
+<div style="padding:36px 28px;background:#F7F6F2">
+  <div style="font-size:18px;font-weight:600;margin-bottom:16px">จองสิทธิ์ free audit วันนี้</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+    <input placeholder="ชื่อ-นามสกุล" style="padding:12px 16px;border-radius:100px;border:0.5px solid #D6D2C4;font-size:13px;background:#FFFFFF">
+    <input placeholder="เบอร์โทรศัพท์" style="padding:12px 16px;border-radius:100px;border:0.5px solid #D6D2C4;font-size:13px;background:#FFFFFF">
+  </div>
+  <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#5B5F55;margin-bottom:16px"><input type="checkbox">ฉันยินยอมให้เก็บข้อมูลตามนโยบายความเป็นส่วนตัว (PDPA)</label>
+  <div class="cta-btn" style="background:#D2202B;color:#FFFFFF;text-align:center;font-size:14px;font-weight:500;padding:13px;border-radius:100px;cursor:pointer">ส่งข้อมูล</div>
+</div>
+
+<div style="padding:28px;font-size:13px;color:#5B5F55">
+  <div class="disp" style="font-weight:700;margin-bottom:10px">enhouse<span style="font-family:'Sarabun',sans-serif;font-weight:400">.digital</span></div>
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <span>081-130-9835, 089-170-6043</span>
+    <span>www.enhouse.digital · marketing@enhouse.digital</span>
+    <span>388/107 ถนนกาญจนาภิเษก แขวงดอกไม้ เขตประเวศ กรุงเทพฯ 10250</span>
+  </div>
+  <div style="border-top:0.5px solid #E7E5E0;margin-top:16px;padding-top:12px;font-size:12px;color:#8A8A82">© 2026 enhouse.digital · นโยบายความเป็นส่วนตัว · คุกกี้</div>
+</div>
+
+</div>
+<script>
+(function(){
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var grid = document.getElementById('grid3');
+  var cnt = document.getElementById('cnt3');
+  var filled=10, total=15;
+  for(var i=0;i<total;i++){
+    var d=document.createElement('div');
+    d.className = i<filled ? 'cell' : '';
+    d.style.aspectRatio='1'; d.style.borderRadius='4px';
+    if(i<filled){ d.style.background='#F7941D'; d.style.animationDelay=(i*0.06)+'s'; }
+    else { d.style.border='0.5px solid #D6D2C4'; }
+    grid.appendChild(d);
+  }
+  if(reduce){ cnt.textContent = filled+' / '+total; return; }
+  var n=0;
+  var iv=setInterval(function(){ n++; cnt.textContent=n+' / '+total; if(n>=filled) clearInterval(iv); },70);
+})();
+</script>
