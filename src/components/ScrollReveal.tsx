@@ -3,7 +3,7 @@
 import { useLayoutEffect } from 'react'
 
 const SELECTOR =
-  '.card, .process-step, .phone-frame, .showcase-phone-slide, .timeline-item, .booking-panel, .photo-collage__card, .hero-split__visual, .lead-business-item'
+  '.card, .process-step, .phone-frame, .showcase-phone-slide, .timeline-item, .booking-panel, .photo-collage__card, .hero-split__visual, .lead-business-item, .case-study-row, .icon-feature-collage'
 
 export function ScrollReveal() {
   useLayoutEffect(() => {

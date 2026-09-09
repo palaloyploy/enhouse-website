@@ -19,7 +19,7 @@ export function Footer({
 }) {
   return (
     <footer className="site-footer">
-      <div className="container site-footer__inner">
+      <div className="footer-container site-footer__inner">
         <div>
           <p className="site-footer__heading">Enhouse</p>
           <div className="site-footer__links">
@@ -54,7 +54,7 @@ export function Footer({
         </div>
       </div>
 
-      <div className="container">
+      <div className="footer-container">
         <div className="site-footer__divider">
           <div className="site-footer__mark" aria-hidden="true">
             <span />

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { useCart } from '@/lib/cart-context'
 import { useMounted } from '@/lib/use-mounted'
 
@@ -62,6 +63,7 @@ export function Header({
   logoUrl?: string | null
 }) {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
 
   return (
     <header className="site-header">
@@ -69,11 +71,19 @@ export function Header({
         <SiteLogo siteName={siteName} logoUrl={logoUrl} />
 
         <nav className={`site-header__nav ${open ? 'is-open' : ''}`}>
-          {navLinks.map((link) => (
-            <a key={link.url} href={link.url} onClick={() => setOpen(false)}>
-              {link.label}
-            </a>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = link.url === '/' ? pathname === '/' : pathname?.startsWith(link.url)
+            return (
+              <a
+                key={link.url}
+                href={link.url}
+                className={isActive ? 'is-active' : ''}
+                onClick={() => setOpen(false)}
+              >
+                {link.label}
+              </a>
+            )
+          })}
         </nav>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

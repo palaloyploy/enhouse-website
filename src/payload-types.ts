@@ -319,6 +319,12 @@ export interface Page {
               id?: string | null;
             }[];
             footnote?: string | null;
+            sideImages?:
+              | {
+                  image: number | Media;
+                  id?: string | null;
+                }[]
+              | null;
             ctaLabel?: string | null;
             ctaUrl?: string | null;
             id?: string | null;
@@ -434,6 +440,7 @@ export interface Page {
                     id?: string | null;
                   }[]
                 | null;
+              footnote?: string | null;
               images?:
                 | {
                     image: number | Media;
@@ -1046,6 +1053,12 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                   };
               footnote?: T;
+              sideImages?:
+                | T
+                | {
+                    image?: T;
+                    id?: T;
+                  };
               ctaLabel?: T;
               ctaUrl?: T;
               id?: T;
@@ -1173,6 +1186,7 @@ export interface PagesSelect<T extends boolean = true> {
                           text?: T;
                           id?: T;
                         };
+                    footnote?: T;
                     images?:
                       | T
                       | {

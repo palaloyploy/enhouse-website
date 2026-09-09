@@ -238,6 +238,12 @@ export const Pages: CollectionConfig = {
               ],
             },
             { name: 'footnote', type: 'text', label: 'ข้อความปิดท้าย (ถ้ามี)' },
+            {
+              name: 'sideImages',
+              type: 'array',
+              label: 'รูปภาพประกอบด้านข้าง (ถ้าใส่ จะเปลี่ยนเป็น layout รายการเลข + รูปภาพ แทนกริดการ์ด)',
+              fields: [{ name: 'image', type: 'upload', relationTo: 'media', required: true }],
+            },
             ...ctaFields,
           ],
         },
@@ -389,6 +395,7 @@ export const Pages: CollectionConfig = {
                   type: 'array',
                   fields: [{ name: 'text', type: 'text', required: true }],
                 },
+                { name: 'footnote', type: 'text', label: 'ข้อความปิดท้าย (แสดงใต้รายการ)' },
                 {
                   name: 'images',
                   type: 'array',
