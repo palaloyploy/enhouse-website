@@ -357,6 +357,7 @@ export interface Page {
         | {
             heading: string;
             subheading?: string | null;
+            variant?: ('cards' | 'compact') | null;
             steps: {
               number?: string | null;
               title: string;
@@ -368,6 +369,183 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'processSteps';
+          }
+        | {
+            number?: string | null;
+            heading: string;
+            exampleLabel?: string | null;
+            exampleText?: string | null;
+            situation?: {
+              heading?: string | null;
+              points?:
+                | {
+                    text: string;
+                    id?: string | null;
+                  }[]
+                | null;
+            };
+            whatWeDid?: {
+              heading?: string | null;
+              points?:
+                | {
+                    text: string;
+                    id?: string | null;
+                  }[]
+                | null;
+            };
+            whatWeFound?: {
+              heading?: string | null;
+              points?:
+                | {
+                    text: string;
+                    id?: string | null;
+                  }[]
+                | null;
+            };
+            result?: {
+              heading?: string | null;
+              points?:
+                | {
+                    text: string;
+                    id?: string | null;
+                  }[]
+                | null;
+            };
+            comparisonGroups?:
+              | {
+                  label: string;
+                  items?:
+                    | {
+                        text: string;
+                        tag?: ('gold' | 'blue' | 'green' | 'red') | null;
+                        id?: string | null;
+                      }[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'layerCaseStudy';
+          }
+        | {
+            number?: string | null;
+            heading: string;
+            subheadingText?: string | null;
+            subheadingHighlight?: string | null;
+            items: {
+              platforms?:
+                | {
+                    label: string;
+                    icon?: (number | null) | Media;
+                    id?: string | null;
+                  }[]
+                | null;
+              title: string;
+              description?: string | null;
+              points?:
+                | {
+                    text: string;
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+            }[];
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'capabilityGrid';
+          }
+        | {
+            number?: string | null;
+            heading: string;
+            flowSteps?:
+              | {
+                  label: string;
+                  id?: string | null;
+                }[]
+              | null;
+            insightHeading?: string | null;
+            insightItems?:
+              | {
+                  title: string;
+                  description?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            actionHeading?: string | null;
+            actionPoints?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            workingHeading?: string | null;
+            workingPoints?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            summaryHeading?: string | null;
+            summaryText?: string | null;
+            nextActionHeading?: string | null;
+            nextActionItems?:
+              | {
+                  tag: string;
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'insightActionPanel';
+          }
+        | {
+            heading: string;
+            subheading?: string | null;
+            centerIcon?: (number | null) | Media;
+            centerLabel: string;
+            centerDescription?: string | null;
+            painPointsIcon?: (number | null) | Media;
+            painPointsHeading?: string | null;
+            painPoints?:
+              | {
+                  icons?:
+                    | {
+                        icon: number | Media;
+                        label?: string | null;
+                        id?: string | null;
+                      }[]
+                    | null;
+                  title: string;
+                  description?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            behaviorIcon?: (number | null) | Media;
+            behaviorLabel?: string | null;
+            behaviorDescription?: string | null;
+            solutionsIcon?: (number | null) | Media;
+            solutionsHeading?: string | null;
+            solutionsItems?:
+              | {
+                  icon?: (number | null) | Media;
+                  title: string;
+                  description?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            impactIcon?: (number | null) | Media;
+            impactHeading?: string | null;
+            impactItems?:
+              | {
+                  text: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'businessCareLoop';
           }
         | {
             heading: string;
@@ -541,7 +719,7 @@ export interface Page {
         | {
             heading?: string | null;
             images: {
-              image: number | Media;
+              image?: (number | null) | Media;
               id?: string | null;
             }[];
             id?: string | null;
@@ -1120,6 +1298,7 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               heading?: T;
               subheading?: T;
+              variant?: T;
               steps?:
                 | T
                 | {
@@ -1130,6 +1309,197 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               ctaLabel?: T;
               ctaUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        layerCaseStudy?:
+          | T
+          | {
+              number?: T;
+              heading?: T;
+              exampleLabel?: T;
+              exampleText?: T;
+              situation?:
+                | T
+                | {
+                    heading?: T;
+                    points?:
+                      | T
+                      | {
+                          text?: T;
+                          id?: T;
+                        };
+                  };
+              whatWeDid?:
+                | T
+                | {
+                    heading?: T;
+                    points?:
+                      | T
+                      | {
+                          text?: T;
+                          id?: T;
+                        };
+                  };
+              whatWeFound?:
+                | T
+                | {
+                    heading?: T;
+                    points?:
+                      | T
+                      | {
+                          text?: T;
+                          id?: T;
+                        };
+                  };
+              result?:
+                | T
+                | {
+                    heading?: T;
+                    points?:
+                      | T
+                      | {
+                          text?: T;
+                          id?: T;
+                        };
+                  };
+              comparisonGroups?:
+                | T
+                | {
+                    label?: T;
+                    items?:
+                      | T
+                      | {
+                          text?: T;
+                          tag?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        capabilityGrid?:
+          | T
+          | {
+              number?: T;
+              heading?: T;
+              subheadingText?: T;
+              subheadingHighlight?: T;
+              items?:
+                | T
+                | {
+                    platforms?:
+                      | T
+                      | {
+                          label?: T;
+                          icon?: T;
+                          id?: T;
+                        };
+                    title?: T;
+                    description?: T;
+                    points?:
+                      | T
+                      | {
+                          text?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        insightActionPanel?:
+          | T
+          | {
+              number?: T;
+              heading?: T;
+              flowSteps?:
+                | T
+                | {
+                    label?: T;
+                    id?: T;
+                  };
+              insightHeading?: T;
+              insightItems?:
+                | T
+                | {
+                    title?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              actionHeading?: T;
+              actionPoints?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              workingHeading?: T;
+              workingPoints?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              summaryHeading?: T;
+              summaryText?: T;
+              nextActionHeading?: T;
+              nextActionItems?:
+                | T
+                | {
+                    tag?: T;
+                    text?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        businessCareLoop?:
+          | T
+          | {
+              heading?: T;
+              subheading?: T;
+              centerIcon?: T;
+              centerLabel?: T;
+              centerDescription?: T;
+              painPointsIcon?: T;
+              painPointsHeading?: T;
+              painPoints?:
+                | T
+                | {
+                    icons?:
+                      | T
+                      | {
+                          icon?: T;
+                          label?: T;
+                          id?: T;
+                        };
+                    title?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              behaviorIcon?: T;
+              behaviorLabel?: T;
+              behaviorDescription?: T;
+              solutionsIcon?: T;
+              solutionsHeading?: T;
+              solutionsItems?:
+                | T
+                | {
+                    icon?: T;
+                    title?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              impactIcon?: T;
+              impactHeading?: T;
+              impactItems?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
               id?: T;
               blockName?: T;
             };

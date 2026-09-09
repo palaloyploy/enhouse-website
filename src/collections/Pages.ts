@@ -279,6 +279,16 @@ export const Pages: CollectionConfig = {
             { name: 'heading', type: 'text', required: true },
             { name: 'subheading', type: 'textarea' },
             {
+              name: 'variant',
+              type: 'select',
+              defaultValue: 'cards',
+              label: 'รูปแบบการ์ด',
+              options: [
+                { label: 'การ์ดใหญ่ (มีเลขใหญ่ + Layer badge + คำอธิบาย)', value: 'cards' },
+                { label: 'แถบสั้น (ชื่อ Layer อย่างเดียว)', value: 'compact' },
+              ],
+            },
+            {
               name: 'steps',
               type: 'array',
               required: true,
@@ -290,6 +300,258 @@ export const Pages: CollectionConfig = {
               ],
             },
             ...ctaFields,
+          ],
+        },
+        {
+          slug: 'layerCaseStudy',
+          labels: {
+            singular: 'Layer เจาะลึก (Situation / What We Did / Found / Result)',
+            plural: 'Layer เจาะลึก',
+          },
+          fields: [
+            { name: 'number', type: 'text', label: 'เลขลำดับ เช่น "01"' },
+            { name: 'heading', type: 'text', required: true, label: 'หัวข้อ Layer' },
+            { name: 'exampleLabel', type: 'text', defaultValue: 'ตัวอย่าง :', label: 'ป้ายกำกับตัวอย่าง' },
+            { name: 'exampleText', type: 'text', label: 'ข้อความตัวอย่าง' },
+            {
+              type: 'group',
+              name: 'situation',
+              label: 'กล่อง Situation',
+              fields: [
+                { name: 'heading', type: 'text', defaultValue: 'Situation' },
+                {
+                  name: 'points',
+                  type: 'array',
+                  minRows: 1,
+                  fields: [{ name: 'text', type: 'textarea', required: true }],
+                },
+              ],
+            },
+            {
+              type: 'group',
+              name: 'whatWeDid',
+              label: 'กล่อง What We Did',
+              fields: [
+                { name: 'heading', type: 'text', defaultValue: 'What We Did' },
+                {
+                  name: 'points',
+                  type: 'array',
+                  minRows: 1,
+                  fields: [{ name: 'text', type: 'textarea', required: true }],
+                },
+              ],
+            },
+            {
+              type: 'group',
+              name: 'whatWeFound',
+              label: 'กล่อง What we found',
+              fields: [
+                { name: 'heading', type: 'text', defaultValue: 'What we found' },
+                {
+                  name: 'points',
+                  type: 'array',
+                  minRows: 1,
+                  fields: [{ name: 'text', type: 'textarea', required: true }],
+                },
+              ],
+            },
+            {
+              type: 'group',
+              name: 'result',
+              label: 'กล่อง Result',
+              fields: [
+                { name: 'heading', type: 'text', defaultValue: 'Result' },
+                {
+                  name: 'points',
+                  type: 'array',
+                  minRows: 1,
+                  fields: [{ name: 'text', type: 'textarea', required: true }],
+                },
+              ],
+            },
+            {
+              name: 'comparisonGroups',
+              type: 'array',
+              dbName: 'lcs_cmp_groups',
+              label: 'แผงเปรียบเทียบฝั่งขวา (เช่น รายการ SKU)',
+              fields: [
+                { name: 'label', type: 'text', required: true, label: 'ชื่อกลุ่ม เช่น "SKU 1"' },
+                {
+                  name: 'items',
+                  type: 'array',
+                  dbName: 'lcs_cmp_items',
+                  minRows: 1,
+                  fields: [
+                    { name: 'text', type: 'text', required: true },
+                    {
+                      name: 'tag',
+                      type: 'select',
+                      defaultValue: 'gold',
+                      options: [
+                        { label: 'ทอง', value: 'gold' },
+                        { label: 'ฟ้า', value: 'blue' },
+                        { label: 'เขียว', value: 'green' },
+                        { label: 'แดง', value: 'red' },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'capabilityGrid',
+          labels: {
+            singular: 'Layer เจาะลึก (การ์ดความสามารถ 3 คอลัมน์)',
+            plural: 'Layer เจาะลึก (การ์ดความสามารถ)',
+          },
+          fields: [
+            { name: 'number', type: 'text', label: 'เลขลำดับ เช่น "02"' },
+            { name: 'heading', type: 'text', required: true, label: 'หัวข้อ Layer' },
+            { name: 'subheadingText', type: 'textarea', label: 'คำอธิบายรอง' },
+            {
+              name: 'subheadingHighlight',
+              type: 'text',
+              label: 'ข้อความที่ต้องการไฮไลต์สีทอง (ต้องเป็นข้อความย่อยของคำอธิบายรอง)',
+            },
+            {
+              name: 'items',
+              type: 'array',
+              required: true,
+              minRows: 1,
+              fields: [
+                {
+                  name: 'platforms',
+                  type: 'array',
+                  label: 'แพลตฟอร์ม/ไอคอนด้านบน (แสดงเป็น badge เล็ก)',
+                  fields: [
+                    { name: 'label', type: 'text', required: true },
+                    { name: 'icon', type: 'upload', relationTo: 'media', label: 'ไอคอน (ถ้ามี จะใช้แทน badge ตัวอักษร)' },
+                  ],
+                },
+                { name: 'title', type: 'text', required: true },
+                { name: 'description', type: 'textarea' },
+                {
+                  name: 'points',
+                  type: 'array',
+                  minRows: 1,
+                  fields: [{ name: 'text', type: 'text', required: true }],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'insightActionPanel',
+          labels: {
+            singular: 'Layer เจาะลึก (Insight / Action-Working / Summary / Next Action)',
+            plural: 'Layer เจาะลึก (Insight / Action)',
+          },
+          fields: [
+            { name: 'number', type: 'text', label: 'เลขลำดับ เช่น "03"' },
+            { name: 'heading', type: 'text', required: true, label: 'หัวข้อ Layer' },
+            {
+              name: 'flowSteps',
+              type: 'array',
+              label: 'ขั้นตอนสั้นๆ ใต้หัวข้อ (แสดงคั่นด้วยลูกศร)',
+              fields: [{ name: 'label', type: 'text', required: true }],
+            },
+            { name: 'insightHeading', type: 'text', defaultValue: '4 Insight' },
+            {
+              name: 'insightItems',
+              type: 'array',
+              minRows: 1,
+              fields: [
+                { name: 'title', type: 'text', required: true },
+                { name: 'description', type: 'textarea' },
+              ],
+            },
+            { name: 'actionHeading', type: 'text', defaultValue: 'Action' },
+            {
+              name: 'actionPoints',
+              type: 'array',
+              fields: [{ name: 'text', type: 'text', required: true }],
+            },
+            { name: 'workingHeading', type: 'text', defaultValue: 'Working' },
+            {
+              name: 'workingPoints',
+              type: 'array',
+              fields: [{ name: 'text', type: 'text', required: true }],
+            },
+            { name: 'summaryHeading', type: 'text', defaultValue: 'Summary' },
+            { name: 'summaryText', type: 'textarea' },
+            { name: 'nextActionHeading', type: 'text', defaultValue: 'Next Action' },
+            {
+              name: 'nextActionItems',
+              type: 'array',
+              fields: [
+                { name: 'tag', type: 'text', required: true },
+                { name: 'text', type: 'text', required: true },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'businessCareLoop',
+          labels: {
+            singular: 'ไดอะแกรมวงกลม (เราดูแลธุรกิจคุณอย่างไร)',
+            plural: 'ไดอะแกรมวงกลม',
+          },
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            { name: 'subheading', type: 'textarea' },
+            { name: 'centerIcon', type: 'upload', relationTo: 'media', label: 'ไอคอนกล่องกลางบน' },
+            { name: 'centerLabel', type: 'text', required: true, label: 'กล่องกลางบน เช่น "ธุรกิจของคุณ"' },
+            { name: 'centerDescription', type: 'textarea' },
+            { name: 'painPointsIcon', type: 'upload', relationTo: 'media', label: 'ไอคอนหัวข้อกล่องขวา' },
+            {
+              name: 'painPointsHeading',
+              type: 'text',
+              defaultValue: '4 Critical Pain Points',
+              label: 'หัวข้อกล่องขวา',
+            },
+            {
+              name: 'painPoints',
+              type: 'array',
+              minRows: 1,
+              fields: [
+                {
+                  name: 'icons',
+                  type: 'array',
+                  label: 'ไอคอนแถวบน (ใส่ได้หลายอัน)',
+                  fields: [
+                    { name: 'icon', type: 'upload', relationTo: 'media', required: true },
+                    { name: 'label', type: 'text', label: 'ชื่อ (ใช้ตัดสินใจใส่พื้นหลังสีให้ไอคอนขาวล้วน)' },
+                  ],
+                },
+                { name: 'title', type: 'text', required: true },
+                { name: 'description', type: 'textarea' },
+              ],
+            },
+            { name: 'behaviorIcon', type: 'upload', relationTo: 'media', label: 'ไอคอนกล่องขวาล่าง' },
+            { name: 'behaviorLabel', type: 'text', label: 'กล่องขวาล่าง เช่น "เข้าใจพฤติกรรมและปรับตัว"' },
+            { name: 'behaviorDescription', type: 'textarea' },
+            { name: 'solutionsIcon', type: 'upload', relationTo: 'media', label: 'ไอคอนหัวข้อกล่องซ้ายล่าง' },
+            { name: 'solutionsHeading', type: 'text', defaultValue: 'Solutions', label: 'หัวข้อกล่องซ้ายล่าง' },
+            {
+              name: 'solutionsItems',
+              type: 'array',
+              minRows: 1,
+              fields: [
+                { name: 'icon', type: 'upload', relationTo: 'media' },
+                { name: 'title', type: 'text', required: true },
+                { name: 'description', type: 'textarea' },
+              ],
+            },
+            { name: 'impactIcon', type: 'upload', relationTo: 'media', label: 'ไอคอนหัวข้อกล่องซ้าย' },
+            { name: 'impactHeading', type: 'text', defaultValue: 'Impact', label: 'หัวข้อกล่องซ้าย' },
+            {
+              name: 'impactItems',
+              type: 'array',
+              minRows: 1,
+              fields: [{ name: 'text', type: 'text', required: true }],
+            },
           ],
         },
         {
@@ -550,7 +812,14 @@ export const Pages: CollectionConfig = {
               type: 'array',
               required: true,
               minRows: 1,
-              fields: [{ name: 'image', type: 'upload', relationTo: 'media', required: true }],
+              fields: [
+                {
+                  name: 'image',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'รูปภาพ (ถ้ายังไม่มีรูป จะแสดงกรอบมือถือว่างไว้ก่อน)',
+                },
+              ],
             },
           ],
         },

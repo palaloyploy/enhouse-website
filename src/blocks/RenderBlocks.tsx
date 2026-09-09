@@ -5,6 +5,7 @@ import { LeadForm } from '@/components/LeadForm'
 import { BookingCalendar } from '@/components/BookingCalendar'
 import { CountUp } from '@/components/CountUp'
 import { ProductCard, type ProductSummary } from '@/components/ProductCard'
+import { PhoneCarousel } from '@/components/PhoneCarousel'
 import { getSiteSettings } from '@/lib/site-settings'
 
 type MediaDoc = {
@@ -117,6 +118,7 @@ type Block = {
 
   // processSteps
   steps?: StepItem[] | null
+  variant?: 'cards' | 'compact' | null
 
   // bookingPromo
   freeSlotsLabel?: string | null
@@ -169,6 +171,77 @@ type Block = {
   checklistHighlight?: string | null
   thresholdText?: string | null
   thresholdCta?: string | null
+
+  // layerCaseStudy
+  number?: string | null
+  exampleLabel?: string | null
+  exampleText?: string | null
+  situation?: LayerCaseGroup | null
+  whatWeDid?: LayerCaseGroup | null
+  whatWeFound?: LayerCaseGroup | null
+  result?: LayerCaseGroup | null
+  comparisonGroups?: ComparisonGroup[] | null
+
+  // capabilityGrid
+  subheadingText?: string | null
+  subheadingHighlight?: string | null
+
+  // insightActionPanel
+  flowSteps?: { label?: string | null }[] | null
+  insightHeading?: string | null
+  insightItems?: { title?: string | null; description?: string | null }[] | null
+  actionHeading?: string | null
+  actionPoints?: PointItem[] | null
+  workingHeading?: string | null
+  workingPoints?: PointItem[] | null
+  summaryHeading?: string | null
+  summaryText?: string | null
+  nextActionHeading?: string | null
+  nextActionItems?: { tag?: string | null; text?: string | null }[] | null
+
+  // businessCareLoop
+  centerIcon?: ImageRef
+  centerLabel?: string | null
+  centerDescription?: string | null
+  painPointsIcon?: ImageRef
+  painPointsHeading?: string | null
+  painPoints?:
+    | {
+        icons?: { icon?: ImageRef; label?: string | null }[] | null
+        title?: string | null
+        description?: string | null
+      }[]
+    | null
+  behaviorIcon?: ImageRef
+  behaviorLabel?: string | null
+  behaviorDescription?: string | null
+  solutionsIcon?: ImageRef
+  solutionsHeading?: string | null
+  solutionsItems?: { icon?: ImageRef; title?: string | null; description?: string | null }[] | null
+  impactIcon?: ImageRef
+  impactHeading?: string | null
+  impactItems?: PointItem[] | null
+}
+
+type LayerCaseGroup = {
+  heading?: string | null
+  points?: PointItem[] | null
+}
+
+type ComparisonTag = 'gold' | 'blue' | 'green' | 'red'
+
+type ComparisonItem = { text?: string | null; tag?: ComparisonTag | null }
+
+type ComparisonGroup = {
+  label?: string | null
+  items?: ComparisonItem[] | null
+}
+
+type CapabilityItem = {
+  platforms?: { label?: string | null; icon?: ImageRef }[] | null
+  title?: string | null
+  description?: string | null
+  points?: PointItem[] | null
 }
 
 function resolveImage(image: ImageRef) {
@@ -246,6 +319,107 @@ function CtaButton({
       <ArrowIcon />
     </a>
   )
+}
+
+function DatabaseIcon({ size = 40 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <ellipse cx="12" cy="5" rx="8" ry="3" stroke="var(--color-accent)" strokeWidth="1.6" />
+      <path
+        d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5"
+        stroke="var(--color-accent)"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path d="M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function StorefrontIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 9l1.2-4.5A1 1 0 0 1 6.16 4h11.68a1 1 0 0 1 .96.75L20 9" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 9a2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0 2.5 2.5 0 0 0 5 0" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5 9.5V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M9.5 20v-4a1.5 1.5 0 0 1 1.5-1.5h2a1.5 1.5 0 0 1 1.5 1.5v4" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function WarningIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 4 3 20h18L12 4Z" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M12 10v4" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" />
+      <circle cx="12" cy="17" r="0.9" fill="var(--color-accent)" />
+    </svg>
+  )
+}
+
+function ChartIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function CheckCircleIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="var(--color-accent)" strokeWidth="1.6" />
+      <path d="M8 12.5l2.5 2.5L16 9.5" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function TrendingUpIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 16l6-6 4 4 8-9" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M15 5h6v6" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function needsColorChip(label: string): boolean {
+  const key = label.trim().toLowerCase()
+  return key.includes('instagram') || key.includes('line')
+}
+
+function needsNeutralChip(label: string): boolean {
+  const key = label.trim().toLowerCase()
+  return key.includes('google ads') || key.includes('google analytics') || key.includes('meta business') || key.includes('google my business') || key.includes('store')
+}
+
+function CareLoopConnector({ x, y, dx, dy }: { x: number; y: number; dx: number; dy: number }) {
+  const length = Math.sqrt(dx * dx + dy * dy)
+  const angle = (Math.atan2(dy, dx) * 180) / Math.PI
+  return (
+    <div
+      className="care-loop-connector"
+      style={{
+        left: x,
+        top: y,
+        width: length,
+        transform: `rotate(${angle}deg)`,
+      }}
+      aria-hidden="true"
+    />
+  )
+}
+
+function getPlatformBadge(label: string): { bg: string; content: React.ReactNode } {
+  const key = label.trim().toLowerCase()
+  if (key.includes('google ads')) return { bg: '#4285f4', content: 'G' }
+  if (key.includes('meta business')) return { bg: '#0081fb', content: 'M' }
+  if (key.includes('facebook')) return { bg: '#1877f2', content: 'f' }
+  if (key.includes('instagram')) return { bg: 'linear-gradient(135deg,#f58529,#dd2a7b,#8134af)', content: 'IG' }
+  if (key.includes('tiktok')) return { bg: '#000000', content: '♪' }
+  if (key.includes('line')) return { bg: '#06c755', content: 'L' }
+  if (key.includes('google analytics') || key === 'ga4') return { bg: '#f9ab00', content: 'GA' }
+  return { bg: 'var(--color-accent)', content: label.slice(0, 2).toUpperCase() }
 }
 
 function LoopIcon() {
@@ -895,26 +1069,414 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                     <h2>{psHeadingNode}</h2>
                     {block.subheading && <p style={{ fontSize: 18 }}>{block.subheading}</p>}
                   </div>
-                  <div className="grid grid-3">
-                    {block.steps?.map((step, j) => (
-                      <div key={j} className="process-step">
-                        <div className="process-step-top">
-                          <span className="process-step-number">{step.number}</span>
-                          <span className="process-step-badge">
-                            <span className="process-step-badge-dot" />
-                            Layer {step.number}
-                          </span>
+                  {block.variant === 'compact' ? (
+                    <div className="process-step-compact-row">
+                      {block.steps?.map((step, j) => (
+                        <div key={j} className="process-step-compact">
+                          <span className="process-step-compact__number">{step.number}</span>
+                          <span className="process-step-compact__title">{step.title}</span>
                         </div>
-                        <h3>{step.title}</h3>
-                        {step.description && <p>{step.description}</p>}
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="grid grid-3">
+                      {block.steps?.map((step, j) => (
+                        <div key={j} className="process-step">
+                          <div className="process-step-top">
+                            <span className="process-step-number">{step.number}</span>
+                            <span className="process-step-badge">
+                              <span className="process-step-badge-dot" />
+                              Layer {step.number}
+                            </span>
+                          </div>
+                          <h3>{step.title}</h3>
+                          {step.description && <p>{step.description}</p>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   {block.ctaLabel && block.ctaUrl && (
                     <div className="process-cta">
                       <CtaButton label={block.ctaLabel} url={block.ctaUrl} />
                     </div>
                   )}
+                </div>
+              </section>
+            )
+          }
+
+          case 'layerCaseStudy': {
+            const renderPoints = (points?: PointItem[] | null) =>
+              points && points.length > 0 ? (
+                <ul className="check-list">
+                  {points.map((p, k) => (
+                    <li key={k}>{p.text}</li>
+                  ))}
+                </ul>
+              ) : null
+
+            return (
+              <section key={i} className="section layer-case-section">
+                <div className="container">
+                  <div className="layer-case-header">
+                    {block.number && <span className="layer-case-number">{block.number}</span>}
+                    <h2>{block.heading}</h2>
+                  </div>
+                  {block.exampleText && (
+                    <p className="layer-case-example">
+                      {block.exampleLabel && <strong>{block.exampleLabel} </strong>}
+                      {block.exampleText}
+                    </p>
+                  )}
+
+                  <div className="layer-case-diagram">
+                    <div className="layer-case-card layer-case-card--found">
+                      <h3>{block.whatWeFound?.heading || 'What we found'}</h3>
+                      {renderPoints(block.whatWeFound?.points)}
+                    </div>
+                    <div className="layer-case-card layer-case-card--result">
+                      <h3>{block.result?.heading || 'Result'}</h3>
+                      {renderPoints(block.result?.points)}
+                    </div>
+
+                    <div className="layer-case-divider" aria-hidden="true" />
+                    <span className="layer-case-arrow layer-case-arrow--situation" aria-hidden="true">
+                      ↓
+                    </span>
+                    <span className="layer-case-arrow layer-case-arrow--found" aria-hidden="true">
+                      ↑
+                    </span>
+                    <span className="layer-case-arrow layer-case-arrow--whatwedid" aria-hidden="true">
+                      ↓
+                    </span>
+                    <span className="layer-case-arrow layer-case-arrow--result" aria-hidden="true">
+                      ↑
+                    </span>
+
+                    <div className="layer-case-card layer-case-card--situation">
+                      <h3>{block.situation?.heading || 'Situation'}</h3>
+                      {renderPoints(block.situation?.points)}
+                    </div>
+                    <div className="layer-case-card layer-case-card--whatwedid">
+                      <h3>{block.whatWeDid?.heading || 'What We Did'}</h3>
+                      {renderPoints(block.whatWeDid?.points)}
+                    </div>
+                    {block.comparisonGroups && block.comparisonGroups.length > 0 && (
+                      <div className="layer-case-comparison">
+                        {block.comparisonGroups.map((group, j) => (
+                          <React.Fragment key={j}>
+                            {j > 0 && <div className="layer-case-comparison__divider" aria-hidden="true" />}
+                            <div className="layer-case-comparison__group">
+                              <span className="layer-case-comparison__label">{group.label}</span>
+                              {group.items?.map((item, k) => (
+                                <span
+                                  key={k}
+                                  className={`layer-case-comparison__item layer-case-comparison__item--${item.tag || 'gold'}`}
+                                >
+                                  <span className="layer-case-comparison__icon" aria-hidden="true" />
+                                  {item.text}
+                                </span>
+                              ))}
+                            </div>
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </section>
+            )
+          }
+
+          case 'capabilityGrid': {
+            const subheadingNode = block.subheadingHighlight
+              ? highlightText(block.subheadingText || '', [block.subheadingHighlight])
+              : block.subheadingText
+
+            return (
+              <section key={i} className="section">
+                <div className="container">
+                  <div className="layer-case-header layer-case-header--center">
+                    {block.number && <span className="layer-case-number">{block.number}</span>}
+                    <h2>{block.heading}</h2>
+                  </div>
+                  {block.subheadingText && (
+                    <p className="layer-capability-subheading">{subheadingNode}</p>
+                  )}
+
+                  <div className="grid grid-3 layer-capability-grid">
+                    {(block.items as unknown as CapabilityItem[])?.map((item, j) => (
+                      <div key={j} className="layer-capability-card">
+                        {item.platforms && item.platforms.length === 1 && (
+                          <div className="layer-capability-icon-single">
+                            {(() => {
+                              const iconImg = resolveImage(item.platforms![0].icon)
+                              if (iconImg?.url) {
+                                return <img src={iconImg.url} alt={item.platforms![0].label || ''} width={40} height={40} />
+                              }
+                              if (item.platforms![0].label?.toLowerCase().includes('database')) {
+                                return <DatabaseIcon size={40} />
+                              }
+                              const badge = getPlatformBadge(item.platforms![0].label || '')
+                              return (
+                                <span className="platform-icon" style={{ background: badge.bg }}>
+                                  {badge.content}
+                                </span>
+                              )
+                            })()}
+                          </div>
+                        )}
+                        {item.platforms && item.platforms.length > 1 && (
+                          <div className="layer-capability-platforms">
+                            {item.platforms.map((p, k) => {
+                              const iconImg = resolveImage(p.icon)
+                              const badge = getPlatformBadge(p.label || '')
+                              if (iconImg?.url) {
+                                if (needsColorChip(p.label || '')) {
+                                  return (
+                                    <span
+                                      key={k}
+                                      className="platform-icon platform-icon--chip"
+                                      style={{ background: badge.bg }}
+                                      title={p.label || ''}
+                                    >
+                                      <img src={iconImg.url} alt={p.label || ''} />
+                                    </span>
+                                  )
+                                }
+                                if (needsNeutralChip(p.label || '')) {
+                                  return (
+                                    <span
+                                      key={k}
+                                      className="platform-icon platform-icon--neutral"
+                                      title={p.label || ''}
+                                    >
+                                      <img src={iconImg.url} alt={p.label || ''} />
+                                    </span>
+                                  )
+                                }
+                                return (
+                                  <span key={k} className="platform-icon platform-icon--image" title={p.label || ''}>
+                                    <img src={iconImg.url} alt={p.label || ''} />
+                                  </span>
+                                )
+                              }
+                              return (
+                                <span
+                                  key={k}
+                                  className="platform-icon"
+                                  style={{ background: badge.bg }}
+                                  title={p.label || ''}
+                                >
+                                  {badge.content}
+                                </span>
+                              )
+                            })}
+                          </div>
+                        )}
+                        <h3>{item.title}</h3>
+                        {item.description && (
+                          <p className="layer-capability-desc">{item.description}</p>
+                        )}
+                        <div className="layer-capability-divider" />
+                        {item.points && item.points.length > 0 && (
+                          <ul className="dot-list">
+                            {item.points.map((p, k) => (
+                              <li key={k}>{p.text}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            )
+          }
+
+          case 'insightActionPanel': {
+            return (
+              <section key={i} className="section">
+                <div className="container">
+                  <div className="layer-case-header layer-case-header--center">
+                    {block.number && <span className="layer-case-number">{block.number}</span>}
+                    <h2>{block.heading}</h2>
+                  </div>
+                  {block.flowSteps && block.flowSteps.length > 0 && (
+                    <p className="layer-flow-steps">
+                      {block.flowSteps.map((s, j) => (
+                        <React.Fragment key={j}>
+                          {j > 0 && <span className="layer-flow-steps__arrow">→</span>}
+                          <span>{s.label}</span>
+                        </React.Fragment>
+                      ))}
+                    </p>
+                  )}
+
+                  <div className="layer-insight-grid">
+                    <div className="layer-insight-card layer-insight-card--blue">
+                      {block.insightHeading && <h3>{block.insightHeading}</h3>}
+                      <div className="layer-insight-list">
+                        {block.insightItems?.map((item, j) => (
+                          <div key={j} className="layer-insight-list__item">
+                            <strong>{item.title}</strong>
+                            {item.description && <p>{item.description}</p>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="venn-wrap">
+                      <div className="venn-circle venn-circle--action">
+                        {block.actionHeading && <h4>{block.actionHeading}</h4>}
+                        {block.actionPoints && block.actionPoints.length > 0 && (
+                          <ul className="venn-list">
+                            {block.actionPoints.map((p, j) => (
+                              <li key={j}>{p.text}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                      <div className="venn-circle venn-circle--working">
+                        {block.workingHeading && <h4>{block.workingHeading}</h4>}
+                        {block.workingPoints && block.workingPoints.length > 0 && (
+                          <ul className="venn-list">
+                            {block.workingPoints.map((p, j) => (
+                              <li key={j}>{p.text}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="layer-insight-side">
+                      <div className="layer-insight-card layer-insight-card--green">
+                        {block.summaryHeading && <h3>{block.summaryHeading}</h3>}
+                        {block.summaryText && <p>{block.summaryText}</p>}
+                      </div>
+                      <div className="layer-insight-card layer-insight-card--gold">
+                        {block.nextActionHeading && <h3>{block.nextActionHeading}</h3>}
+                        <div className="next-action-list">
+                          {block.nextActionItems?.map((item, j) => (
+                            <div key={j} className="next-action-list__item">
+                              {item.tag && <span className="next-action-list__tag">{item.tag}</span>}
+                              <span>{item.text}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )
+          }
+
+          case 'businessCareLoop': {
+            const renderBoxIcon = (imgRef: ImageRef, Fallback: () => React.JSX.Element, size = 24) => {
+              const img = resolveImage(imgRef)
+              if (img?.url) return <img src={img.url} alt="" width={size} height={size} />
+              return <Fallback />
+            }
+
+            return (
+              <section key={i} className="section section--alt">
+                <div className="container">
+                  <div className="section-head">
+                    <h2>{block.heading}</h2>
+                    {block.subheading && <p>{block.subheading}</p>}
+                  </div>
+
+                  <div className="care-loop">
+                    <CareLoopConnector x={696} y={156} dx={64.4} dy={57.0} />
+                    <CareLoopConnector x={734} y={596} dx={-42.2} dy={58.26} />
+                    <CareLoopConnector x={566} y={710} dx={-159.04} dy={0.32} />
+                    <CareLoopConnector x={282} y={632} dx={-54.38} dy={-94.72} />
+                    <CareLoopConnector x={247} y={216} dx={67.26} dy={-53.2} />
+
+                    <div className="care-loop__box care-loop__box--center">
+                      <div className="care-loop__icon">{renderBoxIcon(block.centerIcon, StorefrontIcon)}</div>
+                      <h3>{block.centerLabel}</h3>
+                      {block.centerDescription && <p>{block.centerDescription}</p>}
+                    </div>
+
+                    <div className="care-loop__box care-loop__box--pain">
+                      <div className="care-loop__box-head">
+                        <h3>{block.painPointsHeading}</h3>
+                        {renderBoxIcon(block.painPointsIcon, WarningIcon)}
+                      </div>
+                      <div className="care-loop__pain-grid">
+                        {block.painPoints?.map((p, j) => (
+                          <div key={j} className="care-loop__pain-item">
+                            {p.icons && p.icons.length > 0 && (
+                              <div className="care-loop__pain-icons">
+                                {p.icons.map((ic, k) => {
+                                  const iconImg = resolveImage(ic.icon)
+                                  if (!iconImg?.url) return null
+                                  if (needsColorChip(ic.label || '')) {
+                                    const badge = getPlatformBadge(ic.label || '')
+                                    return (
+                                      <span
+                                        key={k}
+                                        className="care-loop__pain-icon-chip"
+                                        style={{ background: badge.bg }}
+                                      >
+                                        <img src={iconImg.url} alt="" width={18} height={18} />
+                                      </span>
+                                    )
+                                  }
+                                  return <img key={k} src={iconImg.url} alt="" width={28} height={28} />
+                                })}
+                              </div>
+                            )}
+                            <strong>{p.title}</strong>
+                            {p.description && <p>{p.description}</p>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="care-loop__box care-loop__box--behavior">
+                      <div className="care-loop__box-head">
+                        <h3>{block.behaviorLabel}</h3>
+                        {renderBoxIcon(block.behaviorIcon, ChartIcon)}
+                      </div>
+                      {block.behaviorDescription && <p>{block.behaviorDescription}</p>}
+                    </div>
+
+                    <div className="care-loop__box care-loop__box--solutions">
+                      <div className="care-loop__box-head">
+                        <h3>{block.solutionsHeading}</h3>
+                        {renderBoxIcon(block.solutionsIcon, CheckCircleIcon)}
+                      </div>
+                      <div className="care-loop__list">
+                        {block.solutionsItems?.map((s, j) => {
+                          const sIcon = resolveImage(s.icon)
+                          return (
+                            <div key={j} className="care-loop__list-item">
+                              <div className="care-loop__list-item-head">
+                                {sIcon?.url && <img src={sIcon.url} alt="" width={22} height={22} />}
+                                <strong>{s.title}</strong>
+                              </div>
+                              {s.description && <p>{s.description}</p>}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="care-loop__box care-loop__box--impact">
+                      <div className="care-loop__box-head">
+                        <h3>{block.impactHeading}</h3>
+                        {renderBoxIcon(block.impactIcon, TrendingUpIcon)}
+                      </div>
+                      <ul className="check-list">
+                        {block.impactItems?.map((p, j) => (
+                          <li key={j}>{p.text}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </section>
             )
@@ -1329,17 +1891,14 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                       <h2>{block.heading}</h2>
                     </div>
                   )}
-                  <div className="grid grid-4">
-                    {(block.images as ImageItem[] | null)?.map((item, j) => {
-                      const portfolioImg = resolveImage(item.image)
-                      if (!portfolioImg?.url) return null
-                      return (
-                        <div key={j} className="phone-frame">
-                          <img src={portfolioImg.url} alt={portfolioImg.alt || ''} />
-                        </div>
-                      )
-                    })}
-                  </div>
+                  <PhoneCarousel
+                    slides={
+                      (block.images as ImageItem[] | null)?.map((item) => {
+                        const portfolioImg = resolveImage(item.image)
+                        return { url: portfolioImg?.url, alt: portfolioImg?.alt }
+                      }) || []
+                    }
+                  />
                 </div>
               </section>
             )
@@ -1440,7 +1999,11 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
               .filter((item) => item.label)
               .map((item) => ({
                 ...item,
-                icon: <span className={`social-badge social-badge--${item.key}`}>{item.icon}</span>,
+                icon: (
+                  <span className={`social-badge${item.key === 'instagram' ? ' social-badge--transparent' : ''}`}>
+                    {item.icon}
+                  </span>
+                ),
               }))
 
             return (
@@ -1485,36 +2048,45 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                     <div>
                       <p style={{ fontWeight: 700, color: 'var(--color-ink)', marginBottom: 16 }}>ช่องทางการติดต่อ</p>
 
-                      {contact?.phone && (
-                        <div className="contact-info__pill">
-                          {phoneIconNode}
-                          <span>{contact.phone}</span>
-                        </div>
-                      )}
-
-                      {contact?.lineLabel &&
-                        (contact.lineUrl ? (
-                          <a href={contact.lineUrl} className="contact-info__pill contact-info__pill--line">
-                            {lineIconNode}
-                            <span>{contact.lineLabel}</span>
-                          </a>
-                        ) : (
-                          <div className="contact-info__pill contact-info__pill--line">
-                            {lineIconNode}
-                            <span>{contact.lineLabel}</span>
+                      <div className="contact-info__channels">
+                        {contact?.phone && (
+                          <div className="contact-info__pill">
+                            {phoneIconNode}
+                            <span>{contact.phone}</span>
                           </div>
-                        ))}
+                        )}
+
+                        {contact?.lineLabel &&
+                          (contact.lineUrl ? (
+                            <a href={contact.lineUrl} className="contact-info__pill contact-info__pill--line">
+                              {lineIconNode}
+                              <span>{contact.lineLabel}</span>
+                            </a>
+                          ) : (
+                            <div className="contact-info__pill contact-info__pill--line">
+                              {lineIconNode}
+                              <span>{contact.lineLabel}</span>
+                            </div>
+                          ))}
+                      </div>
 
                       {socialItems.length > 0 && (
                         <div className="contact-info__social">
                           {socialItems.map((item) =>
                             item.url ? (
-                              <a key={item.key} href={item.url} className="contact-info__social-item">
+                              <a
+                                key={item.key}
+                                href={item.url}
+                                className={`contact-info__social-item contact-info__social-item--${item.key}`}
+                              >
                                 {item.icon}
                                 <span>{item.label}</span>
                               </a>
                             ) : (
-                              <span key={item.key} className="contact-info__social-item">
+                              <span
+                                key={item.key}
+                                className={`contact-info__social-item contact-info__social-item--${item.key}`}
+                              >
                                 {item.icon}
                                 <span>{item.label}</span>
                               </span>
