@@ -57,10 +57,12 @@ export function Header({
   siteName,
   navLinks,
   logoUrl,
+  headerCta,
 }: {
   siteName: string
   navLinks: NavLink[]
   logoUrl?: string | null
+  headerCta?: { label?: string | null; url?: string | null } | null
 }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
@@ -84,13 +86,18 @@ export function Header({
               </a>
             )
           })}
+          {headerCta?.label && headerCta?.url && (
+            <a href={headerCta.url} className="site-header__nav-cta" onClick={() => setOpen(false)}>
+              {headerCta.label}
+            </a>
+          )}
         </nav>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <CartIcon />
           <button
             type="button"
-            className="site-header__toggle"
+            className={`site-header__toggle ${open ? 'is-open' : ''}`}
             aria-label="เปิด/ปิดเมนู"
             onClick={() => setOpen((v) => !v)}
           >

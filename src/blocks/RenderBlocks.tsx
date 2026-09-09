@@ -160,6 +160,15 @@ type Block = {
   mode?: 'featured' | 'all' | 'selected' | null
   limit?: number | null
   products?: (string | { id: string })[] | null
+
+  // symptomChecklist
+  promoHeading?: string | null
+  promoHighlight?: string | null
+  promoText?: string | null
+  checklistHeading?: string | null
+  checklistHighlight?: string | null
+  thresholdText?: string | null
+  thresholdCta?: string | null
 }
 
 function resolveImage(image: ImageRef) {
@@ -253,6 +262,98 @@ function LoopIcon() {
   )
 }
 
+function PinIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 21s7-6.4 7-12a7 7 0 1 0-14 0c0 5.6 7 12 7 12Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.7" />
+    </svg>
+  )
+}
+
+function MailIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.7" />
+      <path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function PhoneIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M6.5 3h3l1.5 4.5-2 1.5a12 12 0 0 0 6 6l1.5-2 4.5 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.5 5.2 2 2 0 0 1 6.5 3Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function LineIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect width="24" height="24" rx="6" fill="#06C755" />
+      <path
+        d="M18.4 11.1c0-2.9-2.9-5.3-6.4-5.3s-6.4 2.4-6.4 5.3c0 2.6 2.3 4.8 5.4 5.2.2 0 .5.2.6.4.1.2 0 .4 0 .6l-.1.6c0 .2-.1.6.5.3.6-.3 3.1-1.8 4.2-3.1 1.4-1.2 2.2-2.6 2.2-4z"
+        fill="#fff"
+      />
+    </svg>
+  )
+}
+
+function FacebookIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect width="24" height="24" rx="6" fill="#1877F2" />
+      <path
+        d="M15.1 8.3h-1.4c-.4 0-.7.4-.7.9v1.4h2.1l-.3 2.1h-1.8V19h-2.4v-6.3H9V10.6h1.6V9c0-1.6 1-2.9 2.6-2.9h1.9v2.2Z"
+        fill="#fff"
+      />
+    </svg>
+  )
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect width="24" height="24" rx="6" fill="#E1306C" />
+      <rect x="6" y="6" width="12" height="12" rx="4" stroke="#fff" strokeWidth="1.5" />
+      <circle cx="12" cy="12" r="3" stroke="#fff" strokeWidth="1.5" />
+      <circle cx="16" cy="8" r="0.9" fill="#fff" />
+    </svg>
+  )
+}
+
+function TikTokIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect width="24" height="24" rx="6" fill="#111" />
+      <path
+        d="M14.5 6c.3 1.4 1.2 2.3 2.7 2.5v2c-.9 0-1.8-.3-2.6-.8v4.4a3.6 3.6 0 1 1-3.6-3.6c.2 0 .4 0 .6.1v2.1a1.6 1.6 0 1 0 1.2 1.5V6h1.7Z"
+        fill="#fff"
+      />
+    </svg>
+  )
+}
+
+function YoutubeIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect width="24" height="24" rx="6" fill="#FF0000" />
+      <path d="M10 8.5v7l6-3.5-6-3.5Z" fill="#fff" />
+    </svg>
+  )
+}
+
 function HeroBrandMark({ logoUrl }: { logoUrl?: string | null }) {
   if (logoUrl) {
     return (
@@ -320,6 +421,9 @@ async function fetchGridProducts(block: Block): Promise<ProductSummary[]> {
 
 export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
   if (!blocks?.length) return null
+
+  const needsSiteSettings = blocks.some((b) => b.blockType === 'contactInfo')
+  const { settings: siteSettings } = needsSiteSettings ? await getSiteSettings() : { settings: null }
 
   const rendered = await Promise.all(
     blocks.map(async (block, i) => {
@@ -498,6 +602,7 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                 <section key={i} className="hero-split-wrap">
                   <div className={`hero-split${isPhotoLeft ? ' hero-split--photo-left' : ''}`}>
                     <div className="hero-split__content">
+                      {block.eyebrow && <span className="eyebrow">{block.eyebrow}</span>}
                       {block.tag && <p className="hero-split__intro">{block.tag}</p>}
                       <h1>{headingNode}</h1>
                       {block.subheading && (
@@ -538,6 +643,7 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
             return (
               <section key={i} className="section" style={{ paddingTop: 96 }}>
                 <div className="container" style={{ textAlign: 'center', maxWidth: 760 }}>
+                  {block.eyebrow && <span className="eyebrow">{block.eyebrow}</span>}
                   {block.tag && <span className="tag">{block.tag}</span>}
                   <h1 style={{ marginTop: 20 }}>{headingNode}</h1>
                   {block.subheading && (
@@ -1262,6 +1368,222 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                       <CtaButton label={block.ctaLabel} url={block.ctaUrl} />
                     </div>
                   )}
+                </div>
+              </section>
+            )
+          }
+
+          case 'contactInfo': {
+            const contact = siteSettings?.contact as
+              | {
+                  companyName?: string | null
+                  address?: string | null
+                  phone?: string | null
+                  phoneIcon?: ImageRef
+                  lineUrl?: string | null
+                  lineLabel?: string | null
+                  lineIcon?: ImageRef
+                  email?: string | null
+                }
+              | undefined
+            const social = siteSettings?.socialLinks as
+              | {
+                  facebookUrl?: string | null
+                  facebookLabel?: string | null
+                  facebookIcon?: ImageRef
+                  instagramUrl?: string | null
+                  instagramLabel?: string | null
+                  instagramIcon?: ImageRef
+                  tiktokUrl?: string | null
+                  tiktokLabel?: string | null
+                  tiktokIcon?: ImageRef
+                  youtubeUrl?: string | null
+                  youtubeLabel?: string | null
+                  youtubeIcon?: ImageRef
+                }
+              | undefined
+
+            const channelIcon = (image: ImageRef, fallback: React.ReactNode) => {
+              const resolved = resolveImage(image)
+              return resolved?.url ? <img src={resolved.url} alt="" width={20} height={20} /> : fallback
+            }
+
+            const phoneIconNode = channelIcon(contact?.phoneIcon, <PhoneIcon />)
+            const lineIconNode = channelIcon(contact?.lineIcon, <LineIcon />)
+
+            const socialItems = [
+              {
+                key: 'facebook',
+                url: social?.facebookUrl,
+                label: social?.facebookLabel,
+                icon: channelIcon(social?.facebookIcon, <FacebookIcon />),
+              },
+              {
+                key: 'instagram',
+                url: social?.instagramUrl,
+                label: social?.instagramLabel,
+                icon: channelIcon(social?.instagramIcon, <InstagramIcon />),
+              },
+              {
+                key: 'tiktok',
+                url: social?.tiktokUrl,
+                label: social?.tiktokLabel,
+                icon: channelIcon(social?.tiktokIcon, <TikTokIcon />),
+              },
+              {
+                key: 'youtube',
+                url: social?.youtubeUrl,
+                label: social?.youtubeLabel,
+                icon: channelIcon(social?.youtubeIcon, <YoutubeIcon />),
+              },
+            ]
+              .filter((item) => item.label)
+              .map((item) => ({
+                ...item,
+                icon: <span className={`social-badge social-badge--${item.key}`}>{item.icon}</span>,
+              }))
+
+            return (
+              <section key={i} className="section contact-info-section">
+                <div className="container">
+                  <h1 style={{ marginBottom: 12 }}>{block.heading}</h1>
+                  {block.text && <p style={{ fontSize: 17, maxWidth: 620, marginBottom: 0 }}>{block.text}</p>}
+
+                  <div className="contact-info">
+                    <div>
+                      {contact?.companyName && (
+                        <p style={{ fontWeight: 700, color: 'var(--color-ink)', marginBottom: 16 }}>
+                          {contact.companyName}
+                        </p>
+                      )}
+
+                      {contact?.address && (
+                        <div className="contact-info__row">
+                          <span className="contact-info__icon">
+                            <PinIcon />
+                          </span>
+                          <div>
+                            <strong>Location Office</strong>
+                            <p style={{ margin: 0 }}>{contact.address}</p>
+                          </div>
+                        </div>
+                      )}
+
+                      {contact?.email && (
+                        <div className="contact-info__row">
+                          <span className="contact-info__icon">
+                            <MailIcon />
+                          </span>
+                          <div>
+                            <strong>อีเมล</strong>
+                            <p style={{ margin: 0 }}>{contact.email}</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <p style={{ fontWeight: 700, color: 'var(--color-ink)', marginBottom: 16 }}>ช่องทางการติดต่อ</p>
+
+                      {contact?.phone && (
+                        <div className="contact-info__pill">
+                          {phoneIconNode}
+                          <span>{contact.phone}</span>
+                        </div>
+                      )}
+
+                      {contact?.lineLabel &&
+                        (contact.lineUrl ? (
+                          <a href={contact.lineUrl} className="contact-info__pill contact-info__pill--line">
+                            {lineIconNode}
+                            <span>{contact.lineLabel}</span>
+                          </a>
+                        ) : (
+                          <div className="contact-info__pill contact-info__pill--line">
+                            {lineIconNode}
+                            <span>{contact.lineLabel}</span>
+                          </div>
+                        ))}
+
+                      {socialItems.length > 0 && (
+                        <div className="contact-info__social">
+                          {socialItems.map((item) =>
+                            item.url ? (
+                              <a key={item.key} href={item.url} className="contact-info__social-item">
+                                {item.icon}
+                                <span>{item.label}</span>
+                              </a>
+                            ) : (
+                              <span key={item.key} className="contact-info__social-item">
+                                {item.icon}
+                                <span>{item.label}</span>
+                              </span>
+                            ),
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )
+          }
+
+          case 'symptomChecklist': {
+            const items = (block.items as unknown as PointItem[] | null) || []
+            const promoHighlightIdx =
+              block.promoHeading && block.promoHighlight
+                ? block.promoHeading.indexOf(block.promoHighlight)
+                : -1
+            const promoHeadingNode =
+              promoHighlightIdx >= 0 ? (
+                <>
+                  {block.promoHeading!.slice(0, promoHighlightIdx)}
+                  <span className="gradient-text">{block.promoHighlight}</span>
+                  {block.promoHeading!.slice(promoHighlightIdx + block.promoHighlight!.length)}
+                </>
+              ) : (
+                block.promoHeading
+              )
+            return (
+              <section key={i} className="section symptom-checklist-section">
+                <div className="container" style={{ maxWidth: 640 }}>
+                  <div className="promo-card">
+                    <h2 style={{ marginBottom: 8 }}>{promoHeadingNode}</h2>
+                    {block.promoText && (
+                      <p style={{ whiteSpace: 'pre-line', margin: 0 }}>{block.promoText}</p>
+                    )}
+                  </div>
+
+                  <div className="symptom-card">
+                    <h3 style={{ marginBottom: 16 }}>
+                      {block.checklistHeading && block.checklistHighlight
+                        ? highlightText(block.checklistHeading, [block.checklistHighlight])
+                        : block.checklistHeading}
+                    </h3>
+                    {items.length > 0 && (
+                      <ul className="symptom-list">
+                        {items.map((item, j) => (
+                          <li key={j}>{item.text}</li>
+                        ))}
+                      </ul>
+                    )}
+                    {(block.thresholdText || block.thresholdCta) && (
+                      <p className="symptom-list__threshold">
+                        {block.thresholdText && (
+                          <>
+                            ถ้า <span className="symptom-list__check">✓</span> {block.thresholdText}
+                          </>
+                        )}
+                        {block.thresholdCta && (
+                          <>
+                            {' '}
+                            <ArrowIcon /> {block.thresholdCta}
+                          </>
+                        )}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </section>
             )

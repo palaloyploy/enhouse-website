@@ -109,6 +109,13 @@ svg {
   color: var(--color-accent);
 }
 
+.gradient-text {
+  background: linear-gradient(90deg, #efb100 0%, #c89116 50%, #ffdf20 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 .mobile-only-break {
   display: none;
 }
@@ -182,6 +189,12 @@ svg {
   max-width: var(--container);
   margin: 0 auto;
   padding: 0 24px;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0;
+  }
 }
 
 .footer-container {
@@ -407,6 +420,218 @@ svg {
   left: 0;
   top: 0;
   color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* ---- Contact info ---- */
+
+.contact-info-section {
+  background: #fff;
+  background-image: radial-gradient(
+    ellipse 900px 520px at 50% 0%,
+    rgba(200, 145, 22, 0.22) 0%,
+    rgba(200, 145, 22, 0.1) 40%,
+    rgba(200, 145, 22, 0) 100%
+  );
+}
+
+.contact-info {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 3rem;
+  margin-top: 28px;
+}
+
+.contact-info__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.contact-info__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.contact-info__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 14px;
+  width: 100%;
+}
+
+.contact-info__pill--line {
+  background: #06c755;
+  border-color: #06c755;
+  color: #fff;
+}
+
+.contact-info__social {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.contact-info__social-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.social-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.social-badge img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.social-badge--facebook {
+  background: rgba(59, 89, 152, 1);
+}
+
+.social-badge--instagram {
+  background: linear-gradient(
+    135deg,
+    #515bd4 0%,
+    #8134af 17.68%,
+    #dd2a7b 35.36%,
+    #f58529 53.03%,
+    #feda77 70.71%
+  );
+}
+
+.social-badge--tiktok {
+  background: rgba(0, 0, 0, 1);
+}
+
+.social-badge--youtube {
+  background: rgba(255, 0, 0, 1);
+}
+
+@media (max-width: 900px) {
+  .contact-info__social {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-info {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact-info__social {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ---- Symptom checklist ---- */
+
+.symptom-checklist-section {
+  background: radial-gradient(circle at 50% 0%, rgba(201, 150, 43, 0.12), rgba(201, 150, 43, 0) 60%),
+    var(--color-cream);
+}
+
+.promo-card,
+.symptom-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.5rem;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(32, 28, 20, 0.06);
+}
+
+@media (max-width: 640px) {
+  .promo-card,
+  .symptom-card {
+    padding: 1.5rem;
+  }
+}
+
+.promo-card {
+  margin-bottom: 2rem;
+}
+
+.symptom-card {
+  text-align: left;
+}
+
+.symptom-card h3 {
+  text-align: center;
+}
+
+.symptom-list {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.symptom-list li {
+  position: relative;
+  padding-left: 30px;
+  font-size: 15px;
+  color: var(--color-body);
+}
+
+.symptom-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 4px;
+}
+
+.symptom-list__threshold {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.symptom-list__check {
+  color: #1aa34a;
   font-weight: 700;
 }
 
@@ -1197,6 +1422,23 @@ svg {
   width: 22px;
   height: 2px;
   background: var(--color-ink);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.site-header__toggle.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.site-header__toggle.is-open span:nth-child(2) {
+  opacity: 0;
+}
+
+.site-header__toggle.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.site-header__nav-cta {
+  display: none;
 }
 
 @media (max-width: 768px) {
@@ -1205,6 +1447,8 @@ svg {
     min-height: 76px;
     padding-top: 16px;
     padding-bottom: 16px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 
   .site-header__toggle {
@@ -1219,19 +1463,46 @@ svg {
     background: #fff;
     border-bottom: 1px solid var(--color-border);
     flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-    padding: 12px 24px 20px;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px 0 24px;
     display: none;
   }
 
   .site-header__nav.is-open {
     display: flex;
+    min-height: calc(100vh - 76px);
   }
 
-  .site-header__nav a {
-    padding: 10px 0;
+  .site-header__nav a:not(.site-header__nav-cta) {
+    padding: 16px 24px;
     width: 100%;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .site-header__nav a:not(.site-header__nav-cta):last-of-type {
+    border-bottom: none;
+  }
+
+  .site-header__nav a:not(.site-header__nav-cta):hover,
+  .site-header__nav a.is-active {
+    background: var(--color-surface-alt);
+  }
+
+  .site-header__nav-cta {
+    display: block;
+    text-align: center;
+    background: var(--color-black);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin: 20px 24px 4px;
+  }
+
+  .site-header__nav-cta:hover {
+    color: #fff;
+    opacity: 0.9;
   }
 }
 

@@ -144,6 +144,7 @@ export const Pages: CollectionConfig = {
           slug: 'hero',
           labels: { singular: 'Hero (หัวหน้า)', plural: 'Hero (หัวหน้า)' },
           fields: [
+            { name: 'eyebrow', type: 'text', label: 'ป้ายกำกับหมวดหมู่ (เช่น "เกี่ยวกับเรา")' },
             { name: 'tag', type: 'text', label: 'Eyebrow / แท็กเล็กด้านบน' },
             { name: 'heading', type: 'text', required: true, label: 'หัวข้อหลัก' },
             {
@@ -551,6 +552,72 @@ export const Pages: CollectionConfig = {
               minRows: 1,
               fields: [{ name: 'image', type: 'upload', relationTo: 'media', required: true }],
             },
+          ],
+        },
+        {
+          slug: 'contactInfo',
+          labels: { singular: 'ข้อมูลติดต่อ (ที่อยู่ + โซเชียล)', plural: 'ข้อมูลติดต่อ' },
+          fields: [
+            { name: 'heading', type: 'text', required: true, defaultValue: 'ติดต่อเรา' },
+            {
+              name: 'text',
+              type: 'textarea',
+              defaultValue:
+                'ทีมงานของเราพร้อมให้คำแนะนำและช่วยเหลือเพื่อเพิ่มประสิทธิภาพด้านการตลาดให้กับธุรกิจคุณ',
+              admin: {
+                description:
+                  'บริษัท/ที่อยู่/เบอร์โทร/LINE/โซเชียล ดึงมาจาก "ตั้งค่าเว็บไซต์ > ข้อมูลติดต่อ / โซเชียลมีเดีย" โดยอัตโนมัติ ไม่ต้องกรอกซ้ำที่นี่',
+              },
+            },
+          ],
+        },
+        {
+          slug: 'symptomChecklist',
+          labels: { singular: 'Checklist ปัญหาธุรกิจ (ยังไม่ต้องจ้าง Enhouse)', plural: 'Checklist ปัญหาธุรกิจ' },
+          fields: [
+            { name: 'promoHeading', type: 'text', required: true, defaultValue: 'ยังไม่ต้องจ้าง Enhouse' },
+            {
+              name: 'promoHighlight',
+              type: 'text',
+              label: 'ข้อความที่ต้องการไฮไลต์ในหัวข้อ (จะแสดงเป็น gradient สีทอง)',
+              defaultValue: 'ไม่ต้องจ้าง Enhouse',
+            },
+            {
+              name: 'promoText',
+              type: 'textarea',
+              defaultValue: 'ก่อนเปลี่ยนทีมตลาด\nลองรู้ก่อนว่าปัญหาจริงอยู่ตรงไหน',
+            },
+            {
+              name: 'checklistHeading',
+              type: 'text',
+              required: true,
+              defaultValue: 'ธุรกิจของคุณ มีอาการเหล่านี้ไหม?',
+            },
+            {
+              name: 'checklistHighlight',
+              type: 'text',
+              label: 'ข้อความที่ต้องการไฮไลต์ในหัวข้อ checklist',
+              defaultValue: 'มีอาการเหล่านี้ไหม?',
+            },
+            {
+              name: 'items',
+              type: 'array',
+              required: true,
+              minRows: 1,
+              fields: [{ name: 'text', type: 'text', required: true }],
+              defaultValue: [
+                { text: 'มีคนทัก แล้วเงียบ' },
+                { text: 'คุยอยู่ แต่ไม่ขอราคา' },
+                { text: 'เซลบอก Lead ไม่มีคุณภาพ' },
+                { text: 'คนทักมา แต่ไม่ใช่กลุ่มเป้าหมาย' },
+                { text: 'Engagement ดี แต่ยอดทักน้อย' },
+                { text: 'หมุนคอนเทนต์สร้างเรื่อง แต่ไม่มีติดต่อ' },
+                { text: 'ขายราคาแพง แต่ไม่กล้าตัดสินใจ' },
+                { text: 'หมุนคอนเทนต์สร้างเรื่อง แต่ไม่มีติดต่อ' },
+              ],
+            },
+            { name: 'thresholdText', type: 'text', defaultValue: 'มากกว่า 3 ข้อ' },
+            { name: 'thresholdCta', type: 'text', defaultValue: 'ลองทำ Analysis & Checking ดูก่อน' },
           ],
         },
       ],

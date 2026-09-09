@@ -273,6 +273,7 @@ export interface Page {
             blockType: 'textOnly';
           }
         | {
+            eyebrow?: string | null;
             tag?: string | null;
             heading: string;
             highlightText?: string | null;
@@ -546,6 +547,32 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'adsPortfolioGrid';
+          }
+        | {
+            heading: string;
+            /**
+             * บริษัท/ที่อยู่/เบอร์โทร/LINE/โซเชียล ดึงมาจาก "ตั้งค่าเว็บไซต์ > ข้อมูลติดต่อ / โซเชียลมีเดีย" โดยอัตโนมัติ ไม่ต้องกรอกซ้ำที่นี่
+             */
+            text?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'contactInfo';
+          }
+        | {
+            promoHeading: string;
+            promoHighlight?: string | null;
+            promoText?: string | null;
+            checklistHeading: string;
+            checklistHighlight?: string | null;
+            items: {
+              text: string;
+              id?: string | null;
+            }[];
+            thresholdText?: string | null;
+            thresholdCta?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'symptomChecklist';
           }
       )[]
     | null;
@@ -1003,6 +1030,7 @@ export interface PagesSelect<T extends boolean = true> {
         hero?:
           | T
           | {
+              eyebrow?: T;
               tag?: T;
               heading?: T;
               highlightText?: T;
@@ -1307,6 +1335,33 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        contactInfo?:
+          | T
+          | {
+              heading?: T;
+              text?: T;
+              id?: T;
+              blockName?: T;
+            };
+        symptomChecklist?:
+          | T
+          | {
+              promoHeading?: T;
+              promoHighlight?: T;
+              promoText?: T;
+              checklistHeading?: T;
+              checklistHighlight?: T;
+              items?:
+                | T
+                | {
+                    text?: T;
+                    id?: T;
+                  };
+              thresholdText?: T;
+              thresholdCta?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;
@@ -1556,8 +1611,29 @@ export interface SiteSetting {
     companyName?: string | null;
     address?: string | null;
     phone?: string | null;
+    phoneIcon?: (number | null) | Media;
     lineUrl?: string | null;
+    lineLabel?: string | null;
+    lineIcon?: (number | null) | Media;
     email?: string | null;
+  };
+  socialLinks?: {
+    facebookUrl?: string | null;
+    facebookLabel?: string | null;
+    facebookIcon?: (number | null) | Media;
+    instagramUrl?: string | null;
+    instagramLabel?: string | null;
+    instagramIcon?: (number | null) | Media;
+    tiktokUrl?: string | null;
+    tiktokLabel?: string | null;
+    tiktokIcon?: (number | null) | Media;
+    youtubeUrl?: string | null;
+    youtubeLabel?: string | null;
+    youtubeIcon?: (number | null) | Media;
+  };
+  headerCta?: {
+    label?: string | null;
+    url?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1615,8 +1691,33 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         companyName?: T;
         address?: T;
         phone?: T;
+        phoneIcon?: T;
         lineUrl?: T;
+        lineLabel?: T;
+        lineIcon?: T;
         email?: T;
+      };
+  socialLinks?:
+    | T
+    | {
+        facebookUrl?: T;
+        facebookLabel?: T;
+        facebookIcon?: T;
+        instagramUrl?: T;
+        instagramLabel?: T;
+        instagramIcon?: T;
+        tiktokUrl?: T;
+        tiktokLabel?: T;
+        tiktokIcon?: T;
+        youtubeUrl?: T;
+        youtubeLabel?: T;
+        youtubeIcon?: T;
+      };
+  headerCta?:
+    | T
+    | {
+        label?: T;
+        url?: T;
       };
   updatedAt?: T;
   createdAt?: T;

@@ -13,7 +13,7 @@ export default async function MarketingLayout({ children }: { children: React.Re
     <>
       <ScrollReveal />
       <CardTilt />
-      <Header siteName={siteName} navLinks={navLinks} logoUrl={logoUrl} />
+      <Header siteName={siteName} navLinks={navLinks} logoUrl={logoUrl} headerCta={settings?.headerCta} />
       <main>{children}</main>
       <Footer
         siteName={siteName}
