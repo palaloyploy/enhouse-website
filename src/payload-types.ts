@@ -278,6 +278,8 @@ export interface Page {
             heading: string;
             highlightText?: string | null;
             subheading?: string | null;
+            subheadingHighlight?: string | null;
+            quote?: string | null;
             layout?: ('centered' | 'split') | null;
             visualStyle?: ('photo' | 'brandMark') | null;
             image?: (number | null) | Media;
@@ -369,6 +371,58 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'processSteps';
+          }
+        | {
+            image?: (number | null) | Media;
+            exampleLabel?: string | null;
+            exampleText?: string | null;
+            timeline?:
+              | {
+                  label: string;
+                  text: string;
+                  color?: ('green' | 'orange' | 'red') | null;
+                  id?: string | null;
+                }[]
+              | null;
+            funnelColumns?:
+              | {
+                  theme?: ('blue' | 'purple' | 'pink') | null;
+                  rows?:
+                    | {
+                        platforms?:
+                          | {
+                              label: string;
+                              id?: string | null;
+                            }[]
+                          | null;
+                        label: string;
+                        mockCount?: number | null;
+                        id?: string | null;
+                      }[]
+                    | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'exampleFunnelDiagram';
+          }
+        | {
+            heading: string;
+            items: {
+              title: string;
+              points?:
+                | {
+                    text: string;
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+            }[];
+            phoneCount?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'workScopeGrid';
           }
         | {
             number?: string | null;
@@ -663,9 +717,29 @@ export interface Page {
               name: string;
               subtitle?: string | null;
               priceNote?: string | null;
+              audienceLine?: string | null;
+              platforms?:
+                | {
+                    label: string;
+                    icon?: (number | null) | Media;
+                    id?: string | null;
+                  }[]
+                | null;
               features?:
                 | {
                     text: string;
+                    id?: string | null;
+                  }[]
+                | null;
+              groups?:
+                | {
+                    label: string;
+                    points?:
+                      | {
+                          text: string;
+                          id?: string | null;
+                        }[]
+                      | null;
                     id?: string | null;
                   }[]
                 | null;
@@ -676,7 +750,16 @@ export interface Page {
             }[];
             additionalNote?: {
               heading?: string | null;
+              highlight?: string | null;
+              badge?: string | null;
               text?: string | null;
+              subtext?: string | null;
+              points?:
+                | {
+                    text: string;
+                    id?: string | null;
+                  }[]
+                | null;
               ctaLabel?: string | null;
               ctaUrl?: string | null;
             };
@@ -1213,6 +1296,8 @@ export interface PagesSelect<T extends boolean = true> {
               heading?: T;
               highlightText?: T;
               subheading?: T;
+              subheadingHighlight?: T;
+              quote?: T;
               layout?: T;
               visualStyle?: T;
               image?: T;
@@ -1309,6 +1394,62 @@ export interface PagesSelect<T extends boolean = true> {
                   };
               ctaLabel?: T;
               ctaUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        exampleFunnelDiagram?:
+          | T
+          | {
+              image?: T;
+              exampleLabel?: T;
+              exampleText?: T;
+              timeline?:
+                | T
+                | {
+                    label?: T;
+                    text?: T;
+                    color?: T;
+                    id?: T;
+                  };
+              funnelColumns?:
+                | T
+                | {
+                    theme?: T;
+                    rows?:
+                      | T
+                      | {
+                          platforms?:
+                            | T
+                            | {
+                                label?: T;
+                                id?: T;
+                              };
+                          label?: T;
+                          mockCount?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        workScopeGrid?:
+          | T
+          | {
+              heading?: T;
+              items?:
+                | T
+                | {
+                    title?: T;
+                    points?:
+                      | T
+                      | {
+                          text?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+              phoneCount?: T;
               id?: T;
               blockName?: T;
             };
@@ -1635,10 +1776,30 @@ export interface PagesSelect<T extends boolean = true> {
                     name?: T;
                     subtitle?: T;
                     priceNote?: T;
+                    audienceLine?: T;
+                    platforms?:
+                      | T
+                      | {
+                          label?: T;
+                          icon?: T;
+                          id?: T;
+                        };
                     features?:
                       | T
                       | {
                           text?: T;
+                          id?: T;
+                        };
+                    groups?:
+                      | T
+                      | {
+                          label?: T;
+                          points?:
+                            | T
+                            | {
+                                text?: T;
+                                id?: T;
+                              };
                           id?: T;
                         };
                     ctaLabel?: T;
@@ -1650,7 +1811,16 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     heading?: T;
+                    highlight?: T;
+                    badge?: T;
                     text?: T;
+                    subtext?: T;
+                    points?:
+                      | T
+                      | {
+                          text?: T;
+                          id?: T;
+                        };
                     ctaLabel?: T;
                     ctaUrl?: T;
                   };

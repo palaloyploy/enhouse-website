@@ -60,14 +60,38 @@ type CaseStudyItem = {
 
 type FaqItem = { question?: string | null; answer?: string | null }
 
+type PlatformRef = { label?: string | null; icon?: ImageRef }
+
+type ChecklistGroup = { label?: string | null; points?: PointItem[] | null }
+
 type PricingPackage = {
   name?: string | null
   subtitle?: string | null
   priceNote?: string | null
+  audienceLine?: string | null
+  platforms?: PlatformRef[] | null
   features?: PointItem[] | null
+  groups?: ChecklistGroup[] | null
   ctaLabel?: string | null
   ctaUrl?: string | null
   highlighted?: boolean | null
+}
+
+type FunnelTimelineItem = {
+  label?: string | null
+  text?: string | null
+  color?: 'green' | 'orange' | 'red' | null
+}
+
+type FunnelRow = {
+  platforms?: PlatformRef[] | null
+  label?: string | null
+  mockCount?: number | null
+}
+
+type FunnelColumn = {
+  theme?: 'blue' | 'purple' | 'pink' | null
+  rows?: FunnelRow[] | null
 }
 
 type ServiceOption = { label?: string | null }
@@ -86,6 +110,7 @@ type Block = {
   // hero
   tag?: string | null
   highlightText?: string | null
+  quote?: string | null
   layout?: 'centered' | 'split' | 'single' | 'collage' | null
   visualStyle?: 'photo' | 'brandMark' | null
   imageStyle?: 'rounded' | 'circle' | null
@@ -150,10 +175,21 @@ type Block = {
   packages?: PricingPackage[] | null
   additionalNote?: {
     heading?: string | null
+    highlight?: string | null
+    badge?: string | null
     text?: string | null
+    subtext?: string | null
+    points?: PointItem[] | null
     ctaLabel?: string | null
     ctaUrl?: string | null
   } | null
+
+  // exampleFunnelDiagram
+  timeline?: FunnelTimelineItem[] | null
+  funnelColumns?: FunnelColumn[] | null
+
+  // workScopeGrid
+  phoneCount?: number | null
 
   // diagramImage / adsPortfolioGrid
   caption?: string | null
@@ -393,6 +429,23 @@ function needsNeutralChip(label: string): boolean {
   return key.includes('google ads') || key.includes('google analytics') || key.includes('meta business') || key.includes('google my business') || key.includes('store')
 }
 
+function renderSingleCapabilityIcon(platform: { label?: string | null; icon?: ImageRef }): React.ReactNode {
+  const label = platform.label || ''
+  const iconImg = resolveImage(platform.icon)
+  if (iconImg?.url) {
+    return <img src={iconImg.url} alt={label} width={40} height={40} />
+  }
+  if (label.toLowerCase().includes('database')) {
+    return <DatabaseIcon size={40} />
+  }
+  const badge = getPlatformBadge(label)
+  return (
+    <span className="platform-icon" style={{ background: badge.bg }}>
+      {badge.content}
+    </span>
+  )
+}
+
 function CareLoopConnector({ x, y, dx, dy }: { x: number; y: number; dx: number; dy: number }) {
   const length = Math.sqrt(dx * dx + dy * dy)
   const angle = (Math.atan2(dy, dx) * 180) / Math.PI
@@ -419,7 +472,78 @@ function getPlatformBadge(label: string): { bg: string; content: React.ReactNode
   if (key.includes('tiktok')) return { bg: '#000000', content: '♪' }
   if (key.includes('line')) return { bg: '#06c755', content: 'L' }
   if (key.includes('google analytics') || key === 'ga4') return { bg: '#f9ab00', content: 'GA' }
+  if (key.includes('shopee')) return { bg: '#ee4d2d', content: 'SP' }
+  if (key.includes('lazada')) return { bg: '#0f146d', content: 'LZ' }
+  if (key.includes('messenger')) return { bg: '#0084ff', content: 'M' }
+  if (key.includes('whatsapp')) return { bg: '#25d366', content: 'WA' }
+  if (key.includes('google map')) return { bg: '#34a853', content: 'GM' }
+  if (key.includes('google search') || key.includes('search console')) return { bg: '#4285f4', content: 'GS' }
+  if (key.includes('youtube')) return { bg: '#ff0000', content: '▶' }
   return { bg: 'var(--color-accent)', content: label.slice(0, 2).toUpperCase() }
+}
+
+function needsIconChip(label: string): boolean {
+  const key = label.trim().toLowerCase()
+  return key.includes('line') || key.includes('youtube') || key.includes('instagram')
+}
+
+function PlatformIcon({ label, icon, size = 20 }: { label: string; icon?: ImageRef; size?: number }) {
+  const iconImg = resolveImage(icon)
+  if (iconImg?.url) {
+    if (needsIconChip(label)) {
+      const badge = getPlatformBadge(label)
+      return (
+        <span
+          className="platform-icon-chip"
+          style={{ background: badge.bg, width: size, height: size }}
+          title={label}
+        >
+          <img src={iconImg.url} alt={label} style={{ width: size * 0.58, height: size * 0.58 }} />
+        </span>
+      )
+    }
+    return <img src={iconImg.url} alt={label} title={label} style={{ height: size, width: 'auto', maxWidth: size * 1.6 }} />
+  }
+  const key = label.trim().toLowerCase()
+  if (key.includes('facebook')) return <FacebookIcon />
+  if (key.includes('instagram')) return <InstagramIcon />
+  if (key.includes('tiktok')) return <TikTokIcon />
+  if (key.includes('line')) return <LineIcon />
+  if (key.includes('youtube')) return <YoutubeIcon />
+  if (key.includes('database')) return <DatabaseIcon size={size} />
+  if (key.includes('store') || key.includes('shop') || key.includes('market')) return <StorefrontIcon />
+  const badge = getPlatformBadge(label)
+  return (
+    <span
+      className="platform-icon"
+      style={{ background: badge.bg, width: size, height: size, fontSize: size * 0.42 }}
+      title={label}
+    >
+      {badge.content}
+    </span>
+  )
+}
+
+function BoxIcon() {
+  return (
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 3.5 19.5 7.5V16.5L12 20.5L4.5 16.5V7.5L12 3.5Z"
+        stroke="var(--color-accent)"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path d="M4.8 7.7 12 11.5 19.2 7.7M12 11.5V20.3" stroke="var(--color-accent)" strokeWidth="1.6" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function PhoneMock() {
+  return (
+    <div className="phone-mock" aria-hidden="true">
+      <div className="phone-mock__notch" />
+    </div>
+  )
 }
 
 function LoopIcon() {
@@ -815,13 +939,24 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
             }
 
             return (
-              <section key={i} className="section" style={{ paddingTop: 96 }}>
+              <section key={i} className="section hero-split-wrap" style={{ paddingTop: 96 }}>
                 <div className="container" style={{ textAlign: 'center', maxWidth: 760 }}>
                   {block.eyebrow && <span className="eyebrow">{block.eyebrow}</span>}
                   {block.tag && <span className="tag">{block.tag}</span>}
                   <h1 style={{ marginTop: 20 }}>{headingNode}</h1>
                   {block.subheading && (
-                    <p style={{ fontSize: 19, maxWidth: 560, margin: '0 auto 28px' }}>{block.subheading}</p>
+                    <p className="hero-centered-subheading" style={{ maxWidth: 560, margin: '0 auto 28px' }}>
+                      {block.subheadingHighlight ? (
+                        <span className="hero-gradient-text">{block.subheading}</span>
+                      ) : (
+                        block.subheading
+                      )}
+                    </p>
+                  )}
+                  {block.quote && (
+                    <div className="hero-quote-box">
+                      <p>{renderBoldText(block.quote)}</p>
+                    </div>
                   )}
                   {img?.url && (
                     <div
@@ -1105,6 +1240,94 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
             )
           }
 
+          case 'exampleFunnelDiagram': {
+            const timelineColor = (c?: string | null) =>
+              c === 'orange' ? '#c9962b' : c === 'red' ? '#e5484d' : '#2f9e58'
+            return (
+              <section key={i} className="section funnel-diagram-section">
+                <div className="container funnel-diagram-container">
+                  <div className="funnel-example-box">
+                    {block.exampleLabel && <p className="funnel-example-box__label">{block.exampleLabel}</p>}
+                    {block.exampleText && <p className="funnel-example-box__text">{block.exampleText}</p>}
+                    {block.timeline && block.timeline.length > 0 && (
+                      <div className="funnel-timeline">
+                        {block.timeline.map((t, j) => (
+                          <p key={j} className="funnel-timeline__row">
+                            <strong style={{ color: timelineColor(t.color) }}>{t.label}</strong> {t.text}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {img?.url ? (
+                    <div className="funnel-image-frame">
+                      <img src={img.url} alt={img.alt || ''} />
+                    </div>
+                  ) : (
+                  <div className="funnel-grid">
+                    {block.funnelColumns?.map((col, j) => (
+                      <div key={j} className={`funnel-column funnel-column--${col.theme || 'blue'}`}>
+                        {col.rows?.map((row, k) => (
+                          <div key={k} className="funnel-row">
+                            <div className="funnel-row__head">
+                              <div className="funnel-row__platforms">
+                                {row.platforms?.map((p, m) => (
+                                  <PlatformIcon key={m} label={p.label || ''} icon={p.icon} />
+                                ))}
+                              </div>
+                              <span className="funnel-row__label">{row.label}</span>
+                            </div>
+                            {(row.mockCount || 0) > 0 && (
+                              <div className="funnel-row__mocks">
+                                {Array.from({ length: row.mockCount || 0 }).map((_, m) => (
+                                  <div key={m} className="funnel-row__mock" />
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                  )}
+                </div>
+              </section>
+            )
+          }
+
+          case 'workScopeGrid': {
+            const phoneCount = block.phoneCount || 9
+            return (
+              <section key={i} className="section section--dark work-scope-section">
+                <div className="container work-scope-container">
+                  <h2 className="work-scope-heading">{block.heading}</h2>
+                  <div className="work-scope-grid">
+                    <div className="work-scope-list">
+                      {block.items?.map((item, j) => (
+                        <div key={j} className="work-scope-card">
+                          <h3>{item.title}</h3>
+                          {item.points && item.points.length > 0 && (
+                            <ul className="check-list">
+                              {item.points.map((p, k) => (
+                                <li key={k}>{p.text}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="work-scope-phones">
+                      {Array.from({ length: phoneCount }).map((_, j) => (
+                        <PhoneMock key={j} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )
+          }
+
           case 'layerCaseStudy': {
             const renderPoints = (points?: PointItem[] | null) =>
               points && points.length > 0 ? (
@@ -1209,21 +1432,7 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                       <div key={j} className="layer-capability-card">
                         {item.platforms && item.platforms.length === 1 && (
                           <div className="layer-capability-icon-single">
-                            {(() => {
-                              const iconImg = resolveImage(item.platforms![0].icon)
-                              if (iconImg?.url) {
-                                return <img src={iconImg.url} alt={item.platforms![0].label || ''} width={40} height={40} />
-                              }
-                              if (item.platforms![0].label?.toLowerCase().includes('database')) {
-                                return <DatabaseIcon size={40} />
-                              }
-                              const badge = getPlatformBadge(item.platforms![0].label || '')
-                              return (
-                                <span className="platform-icon" style={{ background: badge.bg }}>
-                                  {badge.content}
-                                </span>
-                              )
-                            })()}
+                            {renderSingleCapabilityIcon(item.platforms[0])}
                           </div>
                         )}
                         {item.platforms && item.platforms.length > 1 && (
@@ -1389,10 +1598,10 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
 
                   <div className="care-loop">
                     <CareLoopConnector x={696} y={156} dx={64.4} dy={57.0} />
-                    <CareLoopConnector x={734} y={596} dx={-42.2} dy={58.26} />
-                    <CareLoopConnector x={566} y={710} dx={-159.04} dy={0.32} />
-                    <CareLoopConnector x={282} y={632} dx={-54.38} dy={-94.72} />
-                    <CareLoopConnector x={247} y={216} dx={67.26} dy={-53.2} />
+                    <CareLoopConnector x={734} y={627} dx={-42.2} dy={58.26} />
+                    <CareLoopConnector x={566} y={752} dx={-159.04} dy={0.32} />
+                    <CareLoopConnector x={282} y={664} dx={-54.38} dy={-94.72} />
+                    <CareLoopConnector x={247} y={235} dx={62.39} dy={-58.85} />
 
                     <div className="care-loop__box care-loop__box--center">
                       <div className="care-loop__icon">{renderBoxIcon(block.centerIcon, StorefrontIcon)}</div>
@@ -1752,61 +1961,140 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
 
           case 'pricingPackages':
             return (
-              <section key={i} className="section">
+              <section key={i} className="section section--alt">
                 <div className="container">
                   <div className="section-head">
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+                      <BoxIcon />
+                    </div>
                     <h2>{block.heading}</h2>
                     {block.subheading && <p style={{ fontSize: 18, color: 'var(--color-muted)' }}>{block.subheading}</p>}
                   </div>
                   <div className="grid grid-3">
-                    {block.packages?.map((pkg, j) => (
-                      <div key={j} className={`pricing-card ${pkg.highlighted ? 'pricing-card--highlighted' : ''}`}>
-                        <h3 style={{ fontSize: 21 }}>{pkg.name}</h3>
-                        {pkg.subtitle && <p style={{ fontSize: 14 }}>{pkg.subtitle}</p>}
-                        {pkg.priceNote && <div className="pricing-price">{pkg.priceNote}</div>}
-                        {pkg.features && pkg.features.length > 0 && (
-                          <ul className="check-list" style={{ flexGrow: 1, marginBottom: 24 }}>
-                            {pkg.features.map((f, k) => (
-                              <li key={k}>{f.text}</li>
+                    {block.packages?.map((pkg, j) => {
+                      const hasGroups = pkg.groups && pkg.groups.length > 0
+                      const flowSegments = pkg.audienceLine
+                        ? pkg.audienceLine.split('>').map((s) => s.trim()).filter(Boolean)
+                        : []
+                      return (
+                        <div key={j} className={`pricing-card ${pkg.highlighted ? 'pricing-card--highlighted' : ''}`}>
+                          <h3 style={{ fontSize: 21 }}>{pkg.name}</h3>
+                          {pkg.subtitle && <p style={{ fontSize: 14 }}>{pkg.subtitle}</p>}
+                          {flowSegments.length > 0 && (
+                            <p className="pricing-card__flow">
+                              {flowSegments.map((seg, k) => (
+                                <React.Fragment key={k}>
+                                  {k > 0 && <ArrowIcon />}
+                                  <span>{seg}</span>
+                                </React.Fragment>
+                              ))}
+                            </p>
+                          )}
+                          {pkg.platforms && pkg.platforms.length > 0 && (
+                            <div className="pricing-card__platforms">
+                              {pkg.platforms.map((p, k) => (
+                                <PlatformIcon key={k} label={p.label || ''} icon={p.icon} size={26} />
+                              ))}
+                            </div>
+                          )}
+                          {hasGroups ? (
+                            <div className="pricing-card__groups">
+                              {pkg.groups!.map((g, k) => (
+                                <div key={k} className="pricing-card__group">
+                                  <strong>{g.label}</strong>
+                                  {g.points && g.points.length > 0 && (
+                                    <ul className="check-list">
+                                      {g.points.map((p, m) => (
+                                        <li key={m}>{p.text}</li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <>
+                              {pkg.priceNote && <div className="pricing-price">{pkg.priceNote}</div>}
+                              {pkg.features && pkg.features.length > 0 && (
+                                <ul className="check-list" style={{ flexGrow: 1, marginBottom: 24 }}>
+                                  {pkg.features.map((f, k) => (
+                                    <li key={k}>{f.text}</li>
+                                  ))}
+                                </ul>
+                              )}
+                            </>
+                          )}
+                          <div className="pricing-card__footer">
+                            {hasGroups && <p className="pricing-card__pay-once">Pay once, own it forever</p>}
+                            <CtaButton
+                              label={pkg.ctaLabel}
+                              url={pkg.ctaUrl}
+                              variant={pkg.highlighted ? 'secondary' : 'primary'}
+                            />
+                            {hasGroups && <p className="pricing-card__invoice-note">Invoices and receipts available.</p>}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  {block.additionalNote?.heading &&
+                    (block.additionalNote.points && block.additionalNote.points.length > 0 ? (
+                      <div className="additional-package-card">
+                        <div className="additional-package-card__main">
+                          <div className="additional-package-card__heading-row">
+                            <BoxIcon />
+                            <h3>
+                              {block.additionalNote.highlight
+                                ? highlightText(block.additionalNote.heading, [block.additionalNote.highlight])
+                                : block.additionalNote.heading}
+                            </h3>
+                          </div>
+                          {block.additionalNote.badge && (
+                            <span className="tag additional-package-card__badge">{block.additionalNote.badge}</span>
+                          )}
+                          {block.additionalNote.subtext && (
+                            <p className="additional-package-card__subtext">{block.additionalNote.subtext}</p>
+                          )}
+                          <ul className="check-list additional-package-card__points">
+                            {block.additionalNote.points.map((p, k) => (
+                              <li key={k}>{p.text}</li>
                             ))}
                           </ul>
-                        )}
+                        </div>
+                        <div className="additional-package-card__cta">
+                          <p className="pricing-card__pay-once">Pay once, own it forever</p>
+                          <CtaButton label={block.additionalNote.ctaLabel} url={block.additionalNote.ctaUrl} variant="secondary" />
+                          <p className="pricing-card__invoice-note">Invoices and receipts available.</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        className="section"
+                        style={{
+                          marginTop: 48,
+                          background: 'var(--color-accent)',
+                          borderRadius: 20,
+                          color: '#fff',
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: 20,
+                        }}
+                      >
+                        <div>
+                          <h3 style={{ color: '#fff', marginBottom: 4 }}>{block.additionalNote.heading}</h3>
+                          {block.additionalNote.text && (
+                            <p style={{ color: 'rgba(255,255,255,0.85)', margin: 0 }}>{block.additionalNote.text}</p>
+                          )}
+                        </div>
                         <CtaButton
-                          label={pkg.ctaLabel}
-                          url={pkg.ctaUrl}
-                          variant={pkg.highlighted ? 'secondary' : 'primary'}
+                          label={block.additionalNote.ctaLabel}
+                          url={block.additionalNote.ctaUrl}
+                          variant="secondary"
                         />
                       </div>
                     ))}
-                  </div>
-                  {block.additionalNote?.heading && (
-                    <div
-                      className="section"
-                      style={{
-                        marginTop: 48,
-                        background: 'var(--color-accent)',
-                        borderRadius: 20,
-                        color: '#fff',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: 20,
-                      }}
-                    >
-                      <div>
-                        <h3 style={{ color: '#fff', marginBottom: 4 }}>{block.additionalNote.heading}</h3>
-                        {block.additionalNote.text && (
-                          <p style={{ color: 'rgba(255,255,255,0.85)', margin: 0 }}>{block.additionalNote.text}</p>
-                        )}
-                      </div>
-                      <CtaButton
-                        label={block.additionalNote.ctaLabel}
-                        url={block.additionalNote.ctaUrl}
-                        variant="secondary"
-                      />
-                    </div>
-                  )}
                 </div>
               </section>
             )

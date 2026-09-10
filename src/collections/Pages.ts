@@ -154,6 +154,16 @@ export const Pages: CollectionConfig = {
             },
             { name: 'subheading', type: 'textarea', label: 'คำอธิบายรอง' },
             {
+              name: 'subheadingHighlight',
+              type: 'text',
+              label: 'คำที่ต้องการเน้นสีทองในคำอธิบายรอง (ต้องเป็นข้อความย่อยของคำอธิบายรอง)',
+            },
+            {
+              name: 'quote',
+              type: 'textarea',
+              label: 'กล่องข้อความ (กรอบ) ใต้คำอธิบายรอง เช่น คำโปรยแนวคิด — เว้นบรรทัดได้',
+            },
+            {
               name: 'layout',
               type: 'select',
               defaultValue: 'centered',
@@ -300,6 +310,107 @@ export const Pages: CollectionConfig = {
               ],
             },
             ...ctaFields,
+          ],
+        },
+        {
+          slug: 'exampleFunnelDiagram',
+          dbName: 'efd',
+          labels: {
+            singular: 'ตัวอย่าง + Funnel Diagram ช่องทาง',
+            plural: 'ตัวอย่าง + Funnel Diagram',
+          },
+          fields: [
+            {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+              label: 'รูปไดอะแกรมสำเร็จรูป (ถ้าใส่ จะแสดงรูปนี้แทนกล่อง+กริดที่สร้างจากข้อมูลด้านล่าง)',
+            },
+            { name: 'exampleLabel', type: 'text', defaultValue: 'ตัวอย่าง:', label: 'ป้ายกำกับ' },
+            { name: 'exampleText', type: 'text', label: 'คำอธิบายตัวอย่าง' },
+            {
+              name: 'timeline',
+              type: 'array',
+              label: 'ระยะเวลา (สั้น/กลาง/ปลาย)',
+              minRows: 1,
+              fields: [
+                { name: 'label', type: 'text', required: true, label: 'ป้ายกำกับ เช่น "ระยะสั้น 7 วัน:"' },
+                { name: 'text', type: 'text', required: true, label: 'คำอธิบาย' },
+                {
+                  name: 'color',
+                  type: 'select',
+                  defaultValue: 'green',
+                  options: [
+                    { label: 'เขียว', value: 'green' },
+                    { label: 'ส้ม', value: 'orange' },
+                    { label: 'แดง', value: 'red' },
+                  ],
+                },
+              ],
+            },
+            {
+              name: 'funnelColumns',
+              type: 'array',
+              dbName: 'efd_cols',
+              label: 'คอลัมน์ช่องทาง (ซ้าย/กลาง/ขวา)',
+              minRows: 1,
+              maxRows: 3,
+              fields: [
+                {
+                  name: 'theme',
+                  type: 'select',
+                  defaultValue: 'blue',
+                  options: [
+                    { label: 'ฟ้า', value: 'blue' },
+                    { label: 'ม่วง', value: 'purple' },
+                    { label: 'ชมพู', value: 'pink' },
+                  ],
+                },
+                {
+                  name: 'rows',
+                  type: 'array',
+                  dbName: 'efd_rows',
+                  minRows: 1,
+                  fields: [
+                    {
+                      name: 'platforms',
+                      type: 'array',
+                      dbName: 'efd_pl',
+                      label: 'ไอคอนแพลตฟอร์ม (ใช้ไอคอนที่มีในระบบตามชื่อ)',
+                      fields: [{ name: 'label', type: 'text', required: true }],
+                    },
+                    { name: 'label', type: 'text', required: true, label: 'ชื่อรายการ' },
+                    { name: 'mockCount', type: 'number', defaultValue: 2, label: 'จำนวนกรอบภาพตัวอย่าง (เปล่า)' },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'workScopeGrid',
+          labels: {
+            singular: 'งานที่ดูแลต่อเนื่อง (Checklist 6 การ์ด + มือถือ)',
+            plural: 'งานที่ดูแลต่อเนื่อง',
+          },
+          fields: [
+            { name: 'heading', type: 'text', required: true },
+            {
+              name: 'items',
+              type: 'array',
+              required: true,
+              minRows: 1,
+              fields: [
+                { name: 'title', type: 'text', required: true },
+                {
+                  name: 'points',
+                  type: 'array',
+                  minRows: 1,
+                  fields: [{ name: 'text', type: 'text', required: true }],
+                },
+              ],
+            },
+            { name: 'phoneCount', type: 'number', defaultValue: 9, label: 'จำนวนกรอบมือถือเปล่าด้านขวา' },
           ],
         },
         {
@@ -729,13 +840,42 @@ export const Pages: CollectionConfig = {
               fields: [
                 { name: 'name', type: 'text', required: true },
                 { name: 'subtitle', type: 'text' },
-                { name: 'priceNote', type: 'text', label: 'ข้อความราคา' },
+                { name: 'priceNote', type: 'text', label: 'ข้อความราคา (แบบเดิม ใช้เมื่อไม่มี groups)' },
+                {
+                  name: 'audienceLine',
+                  type: 'text',
+                  label: 'เส้นทางลูกค้า (คั่นด้วย >) เช่น "ค้นหา > เปรียบเทียบ > เข้า Website > ติดต่อ"',
+                },
+                {
+                  name: 'platforms',
+                  type: 'array',
+                  label: 'ไอคอนแพลตฟอร์มแถวบน',
+                  fields: [
+                    { name: 'label', type: 'text', required: true },
+                    { name: 'icon', type: 'upload', relationTo: 'media', label: 'รูปไอคอน (ถ้ามี จะใช้แทนไอคอนสำรอง)' },
+                  ],
+                },
                 {
                   name: 'features',
                   type: 'array',
+                  label: 'Checklist แบบเดิม (ใช้เมื่อไม่มี groups)',
                   fields: [{ name: 'text', type: 'text', required: true }],
                 },
-                { name: 'ctaLabel', type: 'text' },
+                {
+                  name: 'groups',
+                  type: 'array',
+                  label: 'หมวด Checklist แบบใหม่ (มีหัวข้อย่อยหลายหมวด, ถ้าใส่จะแสดงแทน features)',
+                  fields: [
+                    { name: 'label', type: 'text', required: true },
+                    {
+                      name: 'points',
+                      type: 'array',
+                      minRows: 1,
+                      fields: [{ name: 'text', type: 'text', required: true }],
+                    },
+                  ],
+                },
+                { name: 'ctaLabel', type: 'text', defaultValue: 'Buy now' },
                 { name: 'ctaUrl', type: 'text' },
                 { name: 'highlighted', type: 'checkbox', label: 'เน้น (พื้นเข้ม)' },
               ],
@@ -746,8 +886,17 @@ export const Pages: CollectionConfig = {
               label: 'แบนเนอร์บริการเสริม (ด้านล่าง)',
               fields: [
                 { name: 'heading', type: 'text' },
+                { name: 'highlight', type: 'text', label: 'ข้อความไฮไลต์สีทองในหัวข้อ (ต้องเป็นข้อความย่อยของหัวข้อ)' },
+                { name: 'badge', type: 'text', label: 'ป้ายเล็กข้างหัวข้อ เช่น "Additional Package"' },
                 { name: 'text', type: 'textarea' },
-                { name: 'ctaLabel', type: 'text' },
+                { name: 'subtext', type: 'text', label: 'ข้อความรองบรรทัดเล็ก (ถ้ามี)' },
+                {
+                  name: 'points',
+                  type: 'array',
+                  label: 'Checklist 2 คอลัมน์ (ถ้าใส่จะแสดงแบบการ์ดใหม่แทนแบนเนอร์เดิม)',
+                  fields: [{ name: 'text', type: 'text', required: true }],
+                },
+                { name: 'ctaLabel', type: 'text', defaultValue: 'Buy now' },
                 { name: 'ctaUrl', type: 'text' },
               ],
             },
