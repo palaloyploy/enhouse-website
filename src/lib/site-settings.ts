@@ -1,7 +1,7 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
 
-export type NavLink = { label: string; url: string }
+export type NavLink = { label: string; url: string; color?: string | null }
 
 const DEFAULT_NAV_LINKS: NavLink[] = [
   { label: 'หน้าแรก', url: '/' },

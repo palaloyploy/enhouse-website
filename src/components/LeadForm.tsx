@@ -7,11 +7,15 @@ export function LeadForm({
   serviceLabel = 'บริการที่สนใจ',
   submitLabel = 'ส่งข้อมูล',
   showSchedule = true,
+  columns = '1',
+  inputStyle: inputStyleProp = 'box',
 }: {
   serviceOptions?: string[]
   serviceLabel?: string
   submitLabel?: string
   showSchedule?: boolean
+  columns?: '1' | '2'
+  inputStyle?: 'box' | 'line'
 }) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
   const [selectedService, setSelectedService] = useState<string>('')
@@ -61,22 +65,43 @@ export function LeadForm({
     return <p style={{ textAlign: 'center' }}>ขอบคุณครับ ทีมงานจะติดต่อกลับไปเร็วๆ นี้</p>
   }
 
-  const inputStyle: React.CSSProperties = {
-    fontFamily: 'inherit',
-    fontSize: 15,
-    padding: '12px 16px',
-    borderRadius: 8,
-    border: '1px solid var(--color-border)',
-    outline: 'none',
-    width: '100%',
-  }
+  const inputStyle: React.CSSProperties =
+    inputStyleProp === 'line'
+      ? {
+          fontFamily: 'inherit',
+          fontSize: 15,
+          padding: '10px 2px',
+          borderRadius: 0,
+          border: 'none',
+          borderBottom: '1px solid var(--color-border)',
+          outline: 'none',
+          width: '100%',
+          background: 'transparent',
+        }
+      : {
+          fontFamily: 'inherit',
+          fontSize: 15,
+          padding: '12px 16px',
+          borderRadius: 8,
+          border: '1px solid var(--color-border)',
+          outline: 'none',
+          width: '100%',
+        }
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
-      <input name="name" placeholder="ชื่อ-นามสกุล" required style={inputStyle} />
-      <input name="business" placeholder="บริษัท" style={inputStyle} />
-      <input name="phone" placeholder="เบอร์โทรศัพท์" required style={inputStyle} />
-      <input name="email" type="email" placeholder="อีเมล" style={inputStyle} />
+      <div
+        style={
+          columns === '2'
+            ? { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }
+            : { display: 'grid', gap: 12 }
+        }
+      >
+        <input name="name" placeholder="ชื่อ-นามสกุล" required style={inputStyle} />
+        <input name="business" placeholder="บริษัท" style={inputStyle} />
+        <input name="phone" placeholder="เบอร์โทรศัพท์" required style={inputStyle} />
+        <input name="email" type="email" placeholder="อีเมล" style={inputStyle} />
+      </div>
 
       {serviceOptions && serviceOptions.length > 0 && (
         <div>

@@ -102,7 +102,7 @@ export interface Config {
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: number;
+    defaultIDType: string;
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('th' | 'en') | ('th' | 'en')[];
   globals: {
@@ -144,7 +144,7 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: number;
+  id: string;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -169,7 +169,7 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: number;
+  id: string;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -200,21 +200,28 @@ export interface Media {
  * via the `definition` "pages".
  */
 export interface Page {
-  id: number;
+  id: string;
   title: string;
   /**
-   * เช่น "about", "csr" — หน้าแรกให้ใช้ "home"
+   * เช่น "about", "csr" — หน้าแรกให้ใช้ "home" (ระบบจะแปลงเป็นตัวเล็กและตัดช่องว่างให้อัตโนมัติ)
    */
   slug: string;
   meta?: {
     metaTitle?: string | null;
     metaDescription?: string | null;
-    ogImage?: (number | null) | Media;
+    ogImage?: (string | null) | Media;
+  };
+  /**
+   * ใส่เฉพาะถ้าต้องการให้หน้านี้ใช้สีต่างจากเว็บส่วนอื่น — ถ้าปล่อยว่างจะใช้สีจาก "ตั้งค่าเว็บไซต์ > ธีมสี" ตามปกติ
+   */
+  pageTheme?: {
+    headingColor?: string | null;
+    bodyColor?: string | null;
   };
   layout?:
     | (
         | {
-            image?: (number | null) | Media;
+            image?: (string | null) | Media;
             heading: string;
             text?: string | null;
             ctaLabel?: string | null;
@@ -224,7 +231,7 @@ export interface Page {
             blockType: 'imageLeftTextRight';
           }
         | {
-            image?: (number | null) | Media;
+            image?: (string | null) | Media;
             heading: string;
             text?: string | null;
             ctaLabel?: string | null;
@@ -238,7 +245,7 @@ export interface Page {
             text?: string | null;
             images?:
               | {
-                  image?: (number | null) | Media;
+                  image?: (string | null) | Media;
                   caption?: string | null;
                   id?: string | null;
                 }[]
@@ -249,10 +256,10 @@ export interface Page {
           }
         | {
             layout?: ('single' | 'collage') | null;
-            image?: (number | null) | Media;
+            image?: (string | null) | Media;
             collageImages?:
               | {
-                  image: number | Media;
+                  image: string | Media;
                   id?: string | null;
                 }[]
               | null;
@@ -282,7 +289,7 @@ export interface Page {
             quote?: string | null;
             layout?: ('centered' | 'split') | null;
             visualStyle?: ('photo' | 'brandMark') | null;
-            image?: (number | null) | Media;
+            image?: (string | null) | Media;
             imageStyle?: ('rounded' | 'circle') | null;
             primaryCtaLabel?: string | null;
             primaryCtaUrl?: string | null;
@@ -296,7 +303,7 @@ export interface Page {
             heading?: string | null;
             logos?:
               | {
-                  logo: number | Media;
+                  logo: string | Media;
                   url?: string | null;
                   id?: string | null;
                 }[]
@@ -310,7 +317,7 @@ export interface Page {
             subheading?: string | null;
             columns?: ('2' | '3' | '4') | null;
             items: {
-              icon?: (number | null) | Media;
+              icon?: (string | null) | Media;
               title: string;
               description?: string | null;
               points?:
@@ -324,7 +331,7 @@ export interface Page {
             footnote?: string | null;
             sideImages?:
               | {
-                  image: number | Media;
+                  image: string | Media;
                   id?: string | null;
                 }[]
               | null;
@@ -346,7 +353,7 @@ export interface Page {
               | null;
             images?:
               | {
-                  image: number | Media;
+                  image: string | Media;
                   id?: string | null;
                 }[]
               | null;
@@ -373,7 +380,7 @@ export interface Page {
             blockType: 'processSteps';
           }
         | {
-            image?: (number | null) | Media;
+            image?: (string | null) | Media;
             exampleLabel?: string | null;
             exampleText?: string | null;
             timeline?:
@@ -491,7 +498,7 @@ export interface Page {
               platforms?:
                 | {
                     label: string;
-                    icon?: (number | null) | Media;
+                    icon?: (string | null) | Media;
                     id?: string | null;
                   }[]
                 | null;
@@ -557,16 +564,16 @@ export interface Page {
         | {
             heading: string;
             subheading?: string | null;
-            centerIcon?: (number | null) | Media;
+            centerIcon?: (string | null) | Media;
             centerLabel: string;
             centerDescription?: string | null;
-            painPointsIcon?: (number | null) | Media;
+            painPointsIcon?: (string | null) | Media;
             painPointsHeading?: string | null;
             painPoints?:
               | {
                   icons?:
                     | {
-                        icon: number | Media;
+                        icon: string | Media;
                         label?: string | null;
                         id?: string | null;
                       }[]
@@ -576,20 +583,20 @@ export interface Page {
                   id?: string | null;
                 }[]
               | null;
-            behaviorIcon?: (number | null) | Media;
+            behaviorIcon?: (string | null) | Media;
             behaviorLabel?: string | null;
             behaviorDescription?: string | null;
-            solutionsIcon?: (number | null) | Media;
+            solutionsIcon?: (string | null) | Media;
             solutionsHeading?: string | null;
             solutionsItems?:
               | {
-                  icon?: (number | null) | Media;
+                  icon?: (string | null) | Media;
                   title: string;
                   description?: string | null;
                   id?: string | null;
                 }[]
               | null;
-            impactIcon?: (number | null) | Media;
+            impactIcon?: (string | null) | Media;
             impactHeading?: string | null;
             impactItems?:
               | {
@@ -626,6 +633,8 @@ export interface Page {
         | {
             heading: string;
             subheading?: string | null;
+            formColumns?: ('1' | '2') | null;
+            inputStyle?: ('box' | 'line') | null;
             businessListHeading?: string | null;
             businessTypes?:
               | {
@@ -676,7 +685,7 @@ export interface Page {
               footnote?: string | null;
               images?:
                 | {
-                    image: number | Media;
+                    image: string | Media;
                     id?: string | null;
                   }[]
                 | null;
@@ -721,7 +730,7 @@ export interface Page {
               platforms?:
                 | {
                     label: string;
-                    icon?: (number | null) | Media;
+                    icon?: (string | null) | Media;
                     id?: string | null;
                   }[]
                 | null;
@@ -771,9 +780,9 @@ export interface Page {
             heading: string;
             subheading?: string | null;
             leftLabel?: string | null;
-            leftImage: number | Media;
+            leftImage: string | Media;
             rightLabel?: string | null;
-            rightImage: number | Media;
+            rightImage: string | Media;
             id?: string | null;
             blockName?: string | null;
             blockType: 'dualDiagram';
@@ -781,7 +790,7 @@ export interface Page {
         | {
             heading?: string | null;
             subheading?: string | null;
-            image: number | Media;
+            image: string | Media;
             caption?: string | null;
             id?: string | null;
             blockName?: string | null;
@@ -792,7 +801,7 @@ export interface Page {
             subheading?: string | null;
             mode?: ('featured' | 'all' | 'selected') | null;
             limit?: number | null;
-            products?: (number | Product)[] | null;
+            products?: (string | Product)[] | null;
             ctaLabel?: string | null;
             ctaUrl?: string | null;
             id?: string | null;
@@ -802,7 +811,7 @@ export interface Page {
         | {
             heading?: string | null;
             images: {
-              image?: (number | null) | Media;
+              image?: (string | null) | Media;
               id?: string | null;
             }[];
             id?: string | null;
@@ -848,7 +857,7 @@ export interface Page {
  * via the `definition` "products".
  */
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   /**
    * เช่น "wooden-chair"
@@ -857,7 +866,7 @@ export interface Product {
   sku?: string | null;
   price: number;
   compareAtPrice?: number | null;
-  category?: (number | null) | Category;
+  category?: (string | null) | Category;
   color?:
     | (
         | 'purple'
@@ -888,7 +897,7 @@ export interface Product {
   depth?: number | null;
   images?:
     | {
-        image: number | Media;
+        image: string | Media;
         id?: string | null;
       }[]
     | null;
@@ -917,10 +926,10 @@ export interface Product {
  * via the `definition` "categories".
  */
 export interface Category {
-  id: number;
+  id: string;
   name: string;
   slug: string;
-  image?: (number | null) | Media;
+  image?: (string | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -931,7 +940,7 @@ export interface Category {
  * via the `definition` "leads".
  */
 export interface Lead {
-  id: number;
+  id: string;
   name: string;
   phone: string;
   email?: string | null;
@@ -953,14 +962,14 @@ export interface Lead {
  * via the `definition` "orders".
  */
 export interface Order {
-  id: number;
+  id: string;
   customerName: string;
   phone: string;
   email?: string | null;
   address?: string | null;
   note?: string | null;
   items: {
-    product?: (number | null) | Product;
+    product?: (string | null) | Product;
     productName: string;
     unitPrice: number;
     quantity: number;
@@ -985,7 +994,7 @@ export interface Order {
  * via the `definition` "discounts".
  */
 export interface Discount {
-  id: number;
+  id: string;
   /**
    * ลูกค้าจะพิมพ์โค้ดนี้ในตะกร้า เช่น "SALE10"
    */
@@ -1004,7 +1013,7 @@ export interface Discount {
  * via the `definition` "customers".
  */
 export interface Customer {
-  id: number;
+  id: string;
   name: string;
   phone: string;
   email?: string | null;
@@ -1022,11 +1031,11 @@ export interface Customer {
  * via the `definition` "testimonials".
  */
 export interface Testimonial {
-  id: number;
+  id: string;
   name: string;
   quote: string;
   rating?: number | null;
-  avatar?: (number | null) | Media;
+  avatar?: (string | null) | Media;
   verified?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -1038,7 +1047,7 @@ export interface Testimonial {
  * via the `definition` "newsletter-subscribers".
  */
 export interface NewsletterSubscriber {
-  id: number;
+  id: string;
   email: string;
   updatedAt: string;
   createdAt: string;
@@ -1048,7 +1057,7 @@ export interface NewsletterSubscriber {
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: number;
+  id: string;
   key: string;
   data:
     | {
@@ -1065,56 +1074,56 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: number;
+  id: string;
   document?:
     | ({
         relationTo: 'users';
-        value: number | User;
+        value: string | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: number | Media;
+        value: string | Media;
       } | null)
     | ({
         relationTo: 'pages';
-        value: number | Page;
+        value: string | Page;
       } | null)
     | ({
         relationTo: 'leads';
-        value: number | Lead;
+        value: string | Lead;
       } | null)
     | ({
         relationTo: 'products';
-        value: number | Product;
+        value: string | Product;
       } | null)
     | ({
         relationTo: 'orders';
-        value: number | Order;
+        value: string | Order;
       } | null)
     | ({
         relationTo: 'categories';
-        value: number | Category;
+        value: string | Category;
       } | null)
     | ({
         relationTo: 'discounts';
-        value: number | Discount;
+        value: string | Discount;
       } | null)
     | ({
         relationTo: 'customers';
-        value: number | Customer;
+        value: string | Customer;
       } | null)
     | ({
         relationTo: 'testimonials';
-        value: number | Testimonial;
+        value: string | Testimonial;
       } | null)
     | ({
         relationTo: 'newsletter-subscribers';
-        value: number | NewsletterSubscriber;
+        value: string | NewsletterSubscriber;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -1124,10 +1133,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: number;
+  id: string;
   user: {
     relationTo: 'users';
-    value: number | User;
+    value: string | User;
   };
   key?: string | null;
   value?:
@@ -1147,7 +1156,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: number;
+  id: string;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -1220,6 +1229,12 @@ export interface PagesSelect<T extends boolean = true> {
         metaTitle?: T;
         metaDescription?: T;
         ogImage?: T;
+      };
+  pageTheme?:
+    | T
+    | {
+        headingColor?: T;
+        bodyColor?: T;
       };
   layout?:
     | T
@@ -1672,6 +1687,8 @@ export interface PagesSelect<T extends boolean = true> {
           | {
               heading?: T;
               subheading?: T;
+              formColumns?: T;
+              inputStyle?: T;
               businessListHeading?: T;
               businessTypes?:
                 | T
@@ -2105,13 +2122,14 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  * via the `definition` "site-settings".
  */
 export interface SiteSetting {
-  id: number;
+  id: string;
   siteName?: string | null;
-  logo?: (number | null) | Media;
+  logo?: (string | null) | Media;
   navLinks?:
     | {
         label: string;
         url: string;
+        color?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -2145,35 +2163,46 @@ export interface SiteSetting {
     accountName?: string | null;
     accountNumber?: string | null;
     promptPayId?: string | null;
-    qrImage?: (number | null) | Media;
+    qrImage?: (string | null) | Media;
   };
   contact?: {
     companyName?: string | null;
     address?: string | null;
     phone?: string | null;
-    phoneIcon?: (number | null) | Media;
+    phoneIcon?: (string | null) | Media;
     lineUrl?: string | null;
     lineLabel?: string | null;
-    lineIcon?: (number | null) | Media;
+    lineIcon?: (string | null) | Media;
     email?: string | null;
   };
   socialLinks?: {
     facebookUrl?: string | null;
     facebookLabel?: string | null;
-    facebookIcon?: (number | null) | Media;
+    facebookIcon?: (string | null) | Media;
     instagramUrl?: string | null;
     instagramLabel?: string | null;
-    instagramIcon?: (number | null) | Media;
+    instagramIcon?: (string | null) | Media;
     tiktokUrl?: string | null;
     tiktokLabel?: string | null;
-    tiktokIcon?: (number | null) | Media;
+    tiktokIcon?: (string | null) | Media;
     youtubeUrl?: string | null;
     youtubeLabel?: string | null;
-    youtubeIcon?: (number | null) | Media;
+    youtubeIcon?: (string | null) | Media;
+  };
+  /**
+   * ปรับสีหลักของทั้งเว็บไซต์ — ใส่เป็นรหัสสี hex เช่น #c9962b ถ้าปล่อยว่างจะใช้สีเดิมของธีม
+   */
+  theme?: {
+    accentColor?: string | null;
+    headingColor?: string | null;
+    bodyColor?: string | null;
+    headerBgColor?: string | null;
   };
   headerCta?: {
     label?: string | null;
     url?: string | null;
+    bgColor?: string | null;
+    textColor?: string | null;
   };
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -2190,6 +2219,7 @@ export interface SiteSettingsSelect<T extends boolean = true> {
     | {
         label?: T;
         url?: T;
+        color?: T;
         id?: T;
       };
   footerServices?:
@@ -2253,11 +2283,21 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         youtubeLabel?: T;
         youtubeIcon?: T;
       };
+  theme?:
+    | T
+    | {
+        accentColor?: T;
+        headingColor?: T;
+        bodyColor?: T;
+        headerBgColor?: T;
+      };
   headerCta?:
     | T
     | {
         label?: T;
         url?: T;
+        bgColor?: T;
+        textColor?: T;
       };
   updatedAt?: T;
   createdAt?: T;

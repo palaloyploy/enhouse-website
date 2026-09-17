@@ -5,6 +5,7 @@ import { Kanit, Noto_Sans_Thai } from 'next/font/google'
 import config from '@/payload.config'
 import { CartProvider } from '@/lib/cart-context'
 import { WishlistProvider } from '@/lib/wishlist-context'
+import { themeCssVars } from '@/lib/theme'
 import './styles.css'
 
 const kanit = Kanit({
@@ -33,9 +34,18 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
 
   const gtmId = settings?.tracking?.gtmId
 
+  const theme = settings?.theme
+  const themeVars = themeCssVars({
+    '--color-accent': theme?.accentColor,
+    '--color-ink': theme?.headingColor,
+    '--color-body': theme?.bodyColor,
+    '--color-header-bg': theme?.headerBgColor,
+  })
+
   return (
     <html lang="th" className={`${kanit.variable} ${notoSansThai.variable}`}>
       <head>
+        {themeVars && <style dangerouslySetInnerHTML={{ __html: `:root{${themeVars}}` }} />}
         {gtmId && (
           <script
             dangerouslySetInnerHTML={{

@@ -1,5 +1,7 @@
 import type { CollectionConfig, Field } from 'payload'
 
+import { hexColorField } from '../fields/hexColor'
+
 const ctaFields: Field[] = [
   { name: 'ctaLabel', type: 'text', label: 'ปุ่ม (ถ้ามี)' },
   { name: 'ctaUrl', type: 'text', label: 'ลิงก์ปุ่ม' },
@@ -12,12 +14,33 @@ export const Pages: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'slug', 'updatedAt'],
     description: 'สร้างและแก้ไขหน้าเว็บ พร้อมเพิ่ม Section เองได้จาก layout ด้านล่าง',
+    preview: (doc) => {
+      const slug = typeof doc.slug === 'string' && doc.slug ? doc.slug : 'home'
+      const params = new URLSearchParams({ secret: process.env.PREVIEW_SECRET || '', slug })
+      return `${process.env.NEXT_PUBLIC_SERVER_URL || ''}/api/preview?${params.toString()}`
+    },
+    livePreview: {
+      url: ({ data }) => {
+        const slug = typeof data?.slug === 'string' && data.slug ? data.slug : 'home'
+        const params = new URLSearchParams({ secret: process.env.PREVIEW_SECRET || '', slug })
+        return `${process.env.NEXT_PUBLIC_SERVER_URL || ''}/api/preview?${params.toString()}`
+      },
+      breakpoints: [
+        { label: 'มือถือ', name: 'mobile', width: 375, height: 667 },
+        { label: 'แท็บเล็ต', name: 'tablet', width: 768, height: 1024 },
+        { label: 'เดสก์ท็อป', name: 'desktop', width: 1440, height: 900 },
+      ],
+    },
   },
   access: {
     read: () => true,
   },
   versions: {
-    drafts: true,
+    drafts: {
+      autosave: {
+        interval: 800,
+      },
+    },
   },
   fields: [
     {
@@ -33,7 +56,22 @@ export const Pages: CollectionConfig = {
       unique: true,
       label: 'Slug (URL)',
       admin: {
-        description: 'เช่น "about", "csr" — หน้าแรกให้ใช้ "home"',
+        description: 'เช่น "about", "csr" — หน้าแรกให้ใช้ "home" (ระบบจะแปลงเป็นตัวเล็กและตัดช่องว่างให้อัตโนมัติ)',
+      },
+      hooks: {
+        beforeValidate: [
+          ({ value }) => {
+            if (typeof value !== 'string') return value
+            // ลบเฉพาะอักขระที่ใช้ใน URL ไม่ได้ (คงภาษาไทย/อังกฤษ/ตัวเลขไว้)
+            return value
+              .trim()
+              .toLowerCase()
+              .replace(/\s+/g, '-')
+              .replace(/[!"#$%&'()*+,./:;<=>?@[\]^`{|}~]/g, '')
+              .replace(/-+/g, '-')
+              .replace(/^-|-$/g, '')
+          },
+        ],
       },
     },
     {
@@ -44,6 +82,19 @@ export const Pages: CollectionConfig = {
         { name: 'metaTitle', type: 'text', label: 'Meta title' },
         { name: 'metaDescription', type: 'textarea', label: 'Meta description' },
         { name: 'ogImage', type: 'upload', relationTo: 'media', label: 'OG image' },
+      ],
+    },
+    {
+      type: 'group',
+      name: 'pageTheme',
+      label: 'สีตัวอักษรเฉพาะหน้านี้',
+      admin: {
+        description:
+          'ใส่เฉพาะถ้าต้องการให้หน้านี้ใช้สีต่างจากเว็บส่วนอื่น — ถ้าปล่อยว่างจะใช้สีจาก "ตั้งค่าเว็บไซต์ > ธีมสี" ตามปกติ',
+      },
+      fields: [
+        hexColorField('headingColor', 'สีหัวข้อ (เฉพาะหน้านี้)', '#201c14'),
+        hexColorField('bodyColor', 'สีตัวอักษรทั่วไป (เฉพาะหน้านี้)', '#4a4436'),
       ],
     },
     {
@@ -59,6 +110,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'imageLeftTextRight',
           labels: { singular: 'รูปซ้าย / Text ขวา', plural: 'รูปซ้าย / Text ขวา' },
+          admin: { group: 'พื้นฐาน', images: { thumbnail: '/thumbnails/split-image-text.svg' } },
           fields: [
             { name: 'image', type: 'upload', relationTo: 'media' },
             { name: 'heading', type: 'text', required: true },
@@ -69,6 +121,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'imageTopTextBottom',
           labels: { singular: 'รูปบน / Text ล่าง', plural: 'รูปบน / Text ล่าง' },
+          admin: { group: 'พื้นฐาน', images: { thumbnail: '/thumbnails/stacked-image-text.svg' } },
           fields: [
             { name: 'image', type: 'upload', relationTo: 'media' },
             { name: 'heading', type: 'text', required: true },
@@ -79,6 +132,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'imageGallery',
           labels: { singular: 'Gallery (หลายรูป)', plural: 'Gallery (หลายรูป)' },
+          admin: { group: 'พื้นฐาน', images: { thumbnail: '/thumbnails/gallery-grid.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true },
             { name: 'text', type: 'textarea' },
@@ -96,6 +150,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'imageBanner',
           labels: { singular: 'Banner เต็มจอ + Text ทับรูป', plural: 'Banner เต็มจอ + Text ทับรูป' },
+          admin: { group: 'พื้นฐาน', images: { thumbnail: '/thumbnails/full-banner.svg' } },
           fields: [
             {
               name: 'layout',
@@ -133,6 +188,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'textOnly',
           labels: { singular: 'Text อย่างเดียว', plural: 'Text อย่างเดียว' },
+          admin: { group: 'พื้นฐาน', images: { thumbnail: '/thumbnails/text-center.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true },
             { name: 'text', type: 'textarea' },
@@ -143,6 +199,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'hero',
           labels: { singular: 'Hero (หัวหน้า)', plural: 'Hero (หัวหน้า)' },
+          admin: { group: 'หัวข้อหลัก', images: { thumbnail: '/thumbnails/hero-centered.svg' } },
           fields: [
             { name: 'eyebrow', type: 'text', label: 'ป้ายกำกับหมวดหมู่ (เช่น "เกี่ยวกับเรา")' },
             { name: 'tag', type: 'text', label: 'Eyebrow / แท็กเล็กด้านบน' },
@@ -202,6 +259,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'logoStrip',
           labels: { singular: 'แถบโลโก้ลูกค้า', plural: 'แถบโลโก้ลูกค้า' },
+          admin: { group: 'หัวข้อหลัก', images: { thumbnail: '/thumbnails/logo-row.svg' } },
           fields: [
             { name: 'heading', type: 'text', label: 'หัวข้อ เช่น "กลุ่มธุรกิจที่เรารู้จัก"' },
             {
@@ -218,6 +276,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'iconFeatureGrid',
           labels: { singular: 'การ์ดไอคอน + รายการ (บริการ/จุดเด่น)', plural: 'การ์ดไอคอน + รายการ' },
+          admin: { group: 'จุดเด่น/บริการ', images: { thumbnail: '/thumbnails/icon-cards-grid.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true },
             { name: 'subheading', type: 'textarea' },
@@ -264,6 +323,7 @@ export const Pages: CollectionConfig = {
             singular: 'จุดเด่นบริการ + รูปประกอบ (Cross Channel)',
             plural: 'จุดเด่นบริการ + รูปประกอบ',
           },
+          admin: { group: 'จุดเด่น/บริการ', images: { thumbnail: '/thumbnails/feature-split.svg' } },
           fields: [
             { name: 'eyebrow', type: 'text' },
             { name: 'heading', type: 'text', required: true },
@@ -285,6 +345,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'processSteps',
           labels: { singular: 'ขั้นตอนทำงาน (พื้นเข้ม, มีลำดับ)', plural: 'ขั้นตอนทำงาน (พื้นเข้ม)' },
+          admin: { group: 'จุดเด่น/บริการ', images: { thumbnail: '/thumbnails/steps-dark.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true },
             { name: 'subheading', type: 'textarea' },
@@ -319,6 +380,7 @@ export const Pages: CollectionConfig = {
             singular: 'ตัวอย่าง + Funnel Diagram ช่องทาง',
             plural: 'ตัวอย่าง + Funnel Diagram',
           },
+          admin: { group: 'ไดอะแกรม/เคสสตัดดี้', images: { thumbnail: '/thumbnails/funnel-diagram.svg' } },
           fields: [
             {
               name: 'image',
@@ -393,6 +455,7 @@ export const Pages: CollectionConfig = {
             singular: 'งานที่ดูแลต่อเนื่อง (Checklist 6 การ์ด + มือถือ)',
             plural: 'งานที่ดูแลต่อเนื่อง',
           },
+          admin: { group: 'จุดเด่น/บริการ', images: { thumbnail: '/thumbnails/checklist-phones.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true },
             {
@@ -419,6 +482,7 @@ export const Pages: CollectionConfig = {
             singular: 'Layer เจาะลึก (Situation / What We Did / Found / Result)',
             plural: 'Layer เจาะลึก',
           },
+          admin: { group: 'ไดอะแกรม/เคสสตัดดี้', images: { thumbnail: '/thumbnails/quad-diagram.svg' } },
           fields: [
             { name: 'number', type: 'text', label: 'เลขลำดับ เช่น "01"' },
             { name: 'heading', type: 'text', required: true, label: 'หัวข้อ Layer' },
@@ -517,6 +581,7 @@ export const Pages: CollectionConfig = {
             singular: 'Layer เจาะลึก (การ์ดความสามารถ 3 คอลัมน์)',
             plural: 'Layer เจาะลึก (การ์ดความสามารถ)',
           },
+          admin: { group: 'ไดอะแกรม/เคสสตัดดี้', images: { thumbnail: '/thumbnails/icon-cards-grid.svg' } },
           fields: [
             { name: 'number', type: 'text', label: 'เลขลำดับ เช่น "02"' },
             { name: 'heading', type: 'text', required: true, label: 'หัวข้อ Layer' },
@@ -559,6 +624,7 @@ export const Pages: CollectionConfig = {
             singular: 'Layer เจาะลึก (Insight / Action-Working / Summary / Next Action)',
             plural: 'Layer เจาะลึก (Insight / Action)',
           },
+          admin: { group: 'ไดอะแกรม/เคสสตัดดี้', images: { thumbnail: '/thumbnails/panel-stack.svg' } },
           fields: [
             { name: 'number', type: 'text', label: 'เลขลำดับ เช่น "03"' },
             { name: 'heading', type: 'text', required: true, label: 'หัวข้อ Layer' },
@@ -609,6 +675,7 @@ export const Pages: CollectionConfig = {
             singular: 'ไดอะแกรมวงกลม (เราดูแลธุรกิจคุณอย่างไร)',
             plural: 'ไดอะแกรมวงกลม',
           },
+          admin: { group: 'ไดอะแกรม/เคสสตัดดี้', images: { thumbnail: '/thumbnails/circle-diagram.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true },
             { name: 'subheading', type: 'textarea' },
@@ -668,6 +735,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'bookingPromo',
           labels: { singular: 'โปรโมทจองคิว + ปฏิทิน', plural: 'โปรโมทจองคิว + ปฏิทิน' },
+          admin: { group: 'จองคิว/ฟอร์ม/ติดต่อ', images: { thumbnail: '/thumbnails/promo-split.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true, label: 'หัวข้อบนสุด' },
             {
@@ -697,9 +765,32 @@ export const Pages: CollectionConfig = {
         {
           slug: 'leadFormSection',
           labels: { singular: 'ฟอร์มจองคิว/นัดหมาย', plural: 'ฟอร์มจองคิว/นัดหมาย' },
+          admin: { group: 'จองคิว/ฟอร์ม/ติดต่อ', images: { thumbnail: '/thumbnails/form-fields.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true },
             { name: 'subheading', type: 'textarea' },
+            {
+              name: 'formColumns',
+              type: 'select',
+              defaultValue: '1',
+              label: 'รูปแบบคอลัมน์ของฟอร์ม',
+              admin: { width: '50%' },
+              options: [
+                { label: '1 คอลัมน์', value: '1' },
+                { label: '2 คอลัมน์', value: '2' },
+              ],
+            },
+            {
+              name: 'inputStyle',
+              type: 'select',
+              defaultValue: 'box',
+              label: 'รูปแบบกล่องข้อความ',
+              admin: { width: '50%' },
+              options: [
+                { label: 'แบบกล่อง', value: 'box' },
+                { label: 'แบบเส้นใต้', value: 'line' },
+              ],
+            },
             {
               name: 'businessListHeading',
               type: 'text',
@@ -736,6 +827,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'timeline',
           labels: { singular: 'ไทม์ไลน์ (ปีต่อปี)', plural: 'ไทม์ไลน์ (ปีต่อปี)' },
+          admin: { group: 'เนื้อหาอื่นๆ', images: { thumbnail: '/thumbnails/timeline-vertical.svg' } },
           fields: [
             { name: 'heading', type: 'text' },
             {
@@ -754,6 +846,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'caseStudyList',
           labels: { singular: 'รายการผลงาน (รูปหลายใบ + รายละเอียด)', plural: 'รายการผลงาน' },
+          admin: { group: 'เนื้อหาอื่นๆ', images: { thumbnail: '/thumbnails/list-rows.svg' } },
           fields: [
             { name: 'heading', type: 'text' },
             {
@@ -785,6 +878,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'faq',
           labels: { singular: 'คำถามที่พบบ่อย (FAQ)', plural: 'คำถามที่พบบ่อย (FAQ)' },
+          admin: { group: 'เนื้อหาอื่นๆ', images: { thumbnail: '/thumbnails/faq-accordion.svg' } },
           fields: [
             { name: 'heading', type: 'text', defaultValue: 'คำถามที่พบบ่อย' },
             {
@@ -802,6 +896,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'ctaBanner',
           labels: { singular: 'แบนเนอร์ชวนทำนัด (CTA)', plural: 'แบนเนอร์ชวนทำนัด (CTA)' },
+          admin: { group: 'เนื้อหาอื่นๆ', images: { thumbnail: '/thumbnails/cta-banner.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true },
             { name: 'text', type: 'textarea' },
@@ -829,6 +924,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'pricingPackages',
           labels: { singular: 'แพ็กเกจราคา', plural: 'แพ็กเกจราคา' },
+          admin: { group: 'ราคา/สินค้า', images: { thumbnail: '/thumbnails/pricing-cards.svg' } },
           fields: [
             { name: 'heading', type: 'text' },
             { name: 'subheading', type: 'textarea' },
@@ -905,6 +1001,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'dualDiagram',
           labels: { singular: 'ไดอะแกรมเปรียบเทียบ 2 คอลัมน์', plural: 'ไดอะแกรมเปรียบเทียบ 2 คอลัมน์' },
+          admin: { group: 'ไดอะแกรม/เคสสตัดดี้', images: { thumbnail: '/thumbnails/dual-compare.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true },
             { name: 'subheading', type: 'textarea' },
@@ -917,6 +1014,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'diagramImage',
           labels: { singular: 'ไดอะแกรม/ภาพประกอบเต็มความกว้าง', plural: 'ไดอะแกรม/ภาพประกอบ' },
+          admin: { group: 'ไดอะแกรม/เคสสตัดดี้', images: { thumbnail: '/thumbnails/diagram-full.svg' } },
           fields: [
             { name: 'heading', type: 'text' },
             { name: 'subheading', type: 'textarea' },
@@ -927,6 +1025,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'productGrid',
           labels: { singular: 'สินค้าจากร้านค้า (Product Grid)', plural: 'สินค้าจากร้านค้า' },
+          admin: { group: 'ราคา/สินค้า', images: { thumbnail: '/thumbnails/product-grid.svg' } },
           fields: [
             { name: 'heading', type: 'text' },
             { name: 'subheading', type: 'textarea' },
@@ -954,6 +1053,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'adsPortfolioGrid',
           labels: { singular: 'กริดผลงานโฆษณา (Ads Portfolio)', plural: 'กริดผลงานโฆษณา' },
+          admin: { group: 'ราคา/สินค้า', images: { thumbnail: '/thumbnails/phone-grid.svg' } },
           fields: [
             { name: 'heading', type: 'text' },
             {
@@ -975,6 +1075,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'contactInfo',
           labels: { singular: 'ข้อมูลติดต่อ (ที่อยู่ + โซเชียล)', plural: 'ข้อมูลติดต่อ' },
+          admin: { group: 'จองคิว/ฟอร์ม/ติดต่อ', images: { thumbnail: '/thumbnails/contact-rows.svg' } },
           fields: [
             { name: 'heading', type: 'text', required: true, defaultValue: 'ติดต่อเรา' },
             {
@@ -992,6 +1093,7 @@ export const Pages: CollectionConfig = {
         {
           slug: 'symptomChecklist',
           labels: { singular: 'Checklist ปัญหาธุรกิจ (ยังไม่ต้องจ้าง Enhouse)', plural: 'Checklist ปัญหาธุรกิจ' },
+          admin: { group: 'เนื้อหาอื่นๆ', images: { thumbnail: '/thumbnails/checklist-grid.svg' } },
           fields: [
             { name: 'promoHeading', type: 'text', required: true, defaultValue: 'ยังไม่ต้องจ้าง Enhouse' },
             {

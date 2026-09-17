@@ -1,8 +1,21 @@
 import type { GlobalConfig } from 'payload'
 
+import { hexColorField } from '../fields/hexColor'
+
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'ตั้งค่าเว็บไซต์ / Tracking',
+  admin: {
+    preview: () => `${process.env.NEXT_PUBLIC_SERVER_URL || ''}/api/preview?${new URLSearchParams({ secret: process.env.PREVIEW_SECRET || '', slug: 'home' }).toString()}`,
+    livePreview: {
+      url: () => `${process.env.NEXT_PUBLIC_SERVER_URL || ''}/api/preview?${new URLSearchParams({ secret: process.env.PREVIEW_SECRET || '', slug: 'home' }).toString()}`,
+      breakpoints: [
+        { label: 'มือถือ', name: 'mobile', width: 375, height: 667 },
+        { label: 'แท็บเล็ต', name: 'tablet', width: 768, height: 1024 },
+        { label: 'เดสก์ท็อป', name: 'desktop', width: 1440, height: 900 },
+      ],
+    },
+  },
   access: {
     read: () => true,
   },
@@ -21,6 +34,7 @@ export const SiteSettings: GlobalConfig = {
       fields: [
         { name: 'label', type: 'text', required: true },
         { name: 'url', type: 'text', required: true },
+        hexColorField('color', 'สีตัวอักษรลิงก์นี้ (ถ้าไม่ตั้ง จะใช้สีหัวข้อของธีม)', '#201c14'),
       ],
     },
     {
@@ -125,11 +139,27 @@ export const SiteSettings: GlobalConfig = {
     },
     {
       type: 'group',
+      name: 'theme',
+      label: 'ธีมสี',
+      admin: {
+        description: 'ปรับสีหลักของทั้งเว็บไซต์ — ใส่เป็นรหัสสี hex เช่น #c9962b ถ้าปล่อยว่างจะใช้สีเดิมของธีม',
+      },
+      fields: [
+        hexColorField('accentColor', 'สีเน้น (ปุ่ม / ลิงก์ / ไฮไลต์)', '#c9962b'),
+        hexColorField('headingColor', 'สีหัวข้อ', '#201c14'),
+        hexColorField('bodyColor', 'สีตัวอักษรทั่วไป', '#4a4436'),
+        hexColorField('headerBgColor', 'สีพื้นหลัง Header', '#ffffff'),
+      ],
+    },
+    {
+      type: 'group',
       name: 'headerCta',
       label: 'ปุ่ม CTA บน Header (มือถือ)',
       fields: [
         { name: 'label', type: 'text', label: 'ข้อความปุ่ม', defaultValue: 'นัดหมายปรึกษา' },
         { name: 'url', type: 'text', label: 'ลิงก์ปุ่ม', defaultValue: '/contact' },
+        hexColorField('bgColor', 'สีพื้นหลังปุ่ม', '#191510'),
+        hexColorField('textColor', 'สีตัวอักษรปุ่ม', '#ffffff'),
       ],
     },
   ],

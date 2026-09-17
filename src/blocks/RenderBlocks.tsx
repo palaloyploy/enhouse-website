@@ -159,6 +159,8 @@ type Block = {
   serviceOptions?: ServiceOption[] | null
   businessListHeading?: string | null
   businessTypes?: { title?: string | null; points?: PointItem[] | null }[] | null
+  formColumns?: '1' | '2' | null
+  inputStyle?: 'box' | 'line' | null
   serviceLabel?: string | null
 
   // timeline / caseStudyList
@@ -1797,6 +1799,8 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                             serviceLabel={block.serviceLabel || undefined}
                             submitLabel="ยืนยันนัดหมาย"
                             showSchedule={false}
+                            columns={block.formColumns || '1'}
+                            inputStyle={block.inputStyle || 'box'}
                           />
                         </div>
                       </div>
@@ -1805,6 +1809,8 @@ export async function RenderBlocks({ blocks }: { blocks?: Block[] | null }) {
                     <LeadForm
                       serviceOptions={block.serviceOptions?.map((o) => o.label).filter(Boolean) as string[] | undefined}
                       serviceLabel={block.serviceLabel || undefined}
+                      columns={block.formColumns || '1'}
+                      inputStyle={block.inputStyle || 'box'}
                     />
                   )}
                 </div>

@@ -1,9 +1,12 @@
 import { getPayload } from 'payload'
 import { notFound } from 'next/navigation'
+import { draftMode } from 'next/headers'
 import React from 'react'
 
 import config from '@/payload.config'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
+import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { pageThemeStyle } from '@/lib/theme'
 import '../../styles.css'
 
 export default async function DynamicPage({
@@ -12,12 +15,14 @@ export default async function DynamicPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
+  const { isEnabled: draft } = await draftMode()
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
   const result = await payload.find({
     collection: 'pages',
     where: { slug: { equals: slug } },
+    draft,
     limit: 1,
   })
 
@@ -25,7 +30,8 @@ export default async function DynamicPage({
   if (!page) return notFound()
 
   return (
-    <div>
+    <div style={pageThemeStyle(page.pageTheme)}>
+      {draft && <LivePreviewListener />}
       <RenderBlocks blocks={page.layout as any} />
     </div>
   )
@@ -37,12 +43,14 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
+  const { isEnabled: draft } = await draftMode()
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
   const result = await payload.find({
     collection: 'pages',
     where: { slug: { equals: slug } },
+    draft,
     limit: 1,
   })
 

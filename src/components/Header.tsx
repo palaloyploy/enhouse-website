@@ -4,8 +4,9 @@ import React, { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { useCart } from '@/lib/cart-context'
 import { useMounted } from '@/lib/use-mounted'
+import { sanitizeHex } from '@/lib/theme'
 
-type NavLink = { label: string; url: string }
+type NavLink = { label: string; url: string; color?: string | null }
 
 function CartIcon() {
   const { count } = useCart()
@@ -62,10 +63,13 @@ export function Header({
   siteName: string
   navLinks: NavLink[]
   logoUrl?: string | null
-  headerCta?: { label?: string | null; url?: string | null } | null
+  headerCta?: { label?: string | null; url?: string | null; bgColor?: string | null; textColor?: string | null } | null
 }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
+
+  const ctaBgColor = sanitizeHex(headerCta?.bgColor)
+  const ctaTextColor = sanitizeHex(headerCta?.textColor)
 
   return (
     <header className="site-header">
@@ -75,11 +79,13 @@ export function Header({
         <nav className={`site-header__nav ${open ? 'is-open' : ''}`}>
           {navLinks.map((link) => {
             const isActive = link.url === '/' ? pathname === '/' : pathname?.startsWith(link.url)
+            const color = sanitizeHex(link.color)
             return (
               <a
                 key={link.url}
                 href={link.url}
                 className={isActive ? 'is-active' : ''}
+                style={color ? { color } : undefined}
                 onClick={() => setOpen(false)}
               >
                 {link.label}
@@ -87,7 +93,15 @@ export function Header({
             )
           })}
           {headerCta?.label && headerCta?.url && (
-            <a href={headerCta.url} className="site-header__nav-cta" onClick={() => setOpen(false)}>
+            <a
+              href={headerCta.url}
+              className="site-header__nav-cta"
+              style={{
+                ...(ctaBgColor ? { background: ctaBgColor } : {}),
+                ...(ctaTextColor ? { color: ctaTextColor } : {}),
+              }}
+              onClick={() => setOpen(false)}
+            >
               {headerCta.label}
             </a>
           )}
